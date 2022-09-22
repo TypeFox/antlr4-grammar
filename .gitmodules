@@ -1,3 +1,6 @@
 [submodule "langium"]
 	path = langium
 	url = https://github.com/langium/langium
+[submodule "grammars-v4"]
+	path = grammars-v4
+	url = https://github.com/antlr/grammars-v4
