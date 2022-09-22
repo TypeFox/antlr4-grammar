@@ -9,13 +9,176 @@ Person:
 Greeting:
     'Hello' person=[Person:ID] '!';
 
-hidden terminal WS: /\s+/;
-terminal ID: /[_a-zA-Z][\w_]*/;
-terminal INT returns number: /[0-9]+/;
-terminal STRING: /"[^"]*"|'[^']*'/;
+// ======================================================
+// Lexer specification
+// ======================================================
 
-hidden terminal ML_COMMENT: /\/\*[\s\S]*?\*\//;
-hidden terminal SL_COMMENT: /\/\/[^\n\r]*/;
+// -------------------------
+// Comments
+hidden terminal DOC_COMMENT: DocComment;
+hidden terminal BLOCK_COMMENT: BlockComment;
+hidden terminal LINE_COMMENT: LineComment;
+
+// -------------------------
+// Integer
+
+terminal INT: DecimalNumeral;
+
+// -------------------------
+// Literal string
+//
+// ANTLR makes no distinction between a single character literal and a
+// multi-character string. All literals are single quote delimited and
+// may contain unicode escape sequences of the form \uxxxx, where x
+// is a valid hexadecimal number (per Unicode standard).
+terminal STRING_LITERAL: SQuoteLiteral;
+terminal UNTERMINATED_STRING_LITERAL: USQuoteLiteral;
+
+// -------------------------
+// Arguments
+//
+// Certain argument lists, such as those specifying call parameters
+// to a rule invocation, or input parameters to a rule specification
+// are contained within square brackets.
+terminal BEGIN_ARGUMENT: LBrack; //TODO  { this.handleBeginArgument(); }
+
+// -------------------------
+// Target Language Actions
+terminal BEGIN_ACTION: LBrace; //TODO -> pushMode (TargetLanguageAction);
+
+// -------------------------
+// Keywords
+//
+// 'options', 'tokens', and 'channels' are considered keywords
+// but only when followed by '{', and considered as a single token.
+// Otherwise, the symbols are tokenized as RULE_REF and allowed as
+// an identifier in a labeledElement.
+terminal OPTIONS      : 'options'  WSNLCHARS* '{'  ;
+terminal TOKENS       : 'tokens'   WSNLCHARS* '{'  ;
+terminal CHANNELS     : 'channels' WSNLCHARS* '{'  ;
+terminal fragment WSNLCHARS : / / | '\t' | '\f' | '\n' | '\r' ;
+terminal IMPORT: 'import';
+terminal FRAGMENT: 'fragment';
+terminal LEXER: 'lexer';
+terminal PARSER: 'parser';
+terminal GRAMMAR: 'grammar';
+terminal PROTECTED: 'protected';
+terminal PUBLIC: 'public';
+terminal PRIVATE: 'private';
+terminal RETURNS: 'returns';
+terminal LOCALS: 'locals';
+terminal THROWS: 'throws';
+terminal CATCH: 'catch';
+terminal FINALLY: 'finally';
+terminal MODE: 'mode';
+
+// -------------------------
+// Punctuation
+terminal COLON: Colon;
+terminal COLONCOLON: DColon;
+terminal COMMA: Comma;
+terminal SEMI: Semi;
+terminal LPAREN: LParen;
+terminal RPAREN: RParen;
+terminal LBRACE: LBrace;
+terminal RBRACE: RBrace;
+terminal RARROW: RArrow;
+terminal LT: Lt;
+terminal GT: Gt;
+terminal ASSIGN: Equal;
+terminal QUESTION: Question;
+terminal STAR: Star;
+terminal PLUS_ASSIGN: PlusAssign;
+terminal PLUS: Plus;
+terminal OR: Pipe;
+terminal DOLLAR: Dollar;
+terminal RANGE: Range;
+terminal DOT: Dot;
+terminal AT: At;
+terminal POUND: Pound;
+terminal NOT: Tilde;
+
+// -------------------------
+// Identifiers - allows unicode rule/token names
+terminal ID: Id;
+
+// -------------------------
+// Whitespace
+hidden terminal WS: Ws+;
+
+// -------------------------
+// Illegal Characters
+//
+// This is an illegal character trap which is always the last rule in the
+// lexer specification. It matches a single character of any value and being
+// the last rule in the file will match when no other rule knows what to do
+// about the character. It is reported as an error but is not passed on to the
+// parser. This means that the parser to deal with the gramamr file anyway
+// but we will not try to analyse or code generate from a file with lexical
+// errors.
+
+// ======================================================
+// Lexer modes
+// -------------------------
+// Arguments
+// mode Argument;
+// E.g., [int x, List<String> a[]]
+terminal NESTED_ARGUMENT
+   : LBrack
+   ;
+
+terminal ARGUMENT_ESCAPE
+   : EscAny
+   ;
+
+terminal ARGUMENT_STRING_LITERAL
+   : DQuoteLiteral
+   ;
+
+terminal ARGUMENT_CHAR_LITERAL
+   : SQuoteLiteral
+   ;
+
+terminal END_ARGUMENT
+   : RBrack
+   ;
+
+terminal ARGUMENT_CONTENT: /./;
+
+// TODO: This grammar and the one used in the Intellij Antlr4 plugin differ
+// for "actions". This needs to be resolved at some point.
+// The Intellij Antlr4 grammar is here:
+// https://github.com/antlr/intellij-plugin-v4/blob/1f36fde17f7fa63cb18d7eeb9cb213815ac658fb/src/main/antlr/org/antlr/intellij/plugin/parser/ANTLRv4Lexer.g4#L587
+
+// -------------------------
+// Target Language Actions
+//
+// Many language targets use {} as block delimiters and so we
+// must recursively match {} delimited blocks to balance the
+// braces. Additionally, we must make some assumptions about
+// literal string representation in the target language. We assume
+// that they are delimited by ' or " and so consume these
+// in their own alts so as not to inadvertantly match {}.
+// mode TargetLanguageAction;
+terminal NESTED_ACTION: LBrace;
+terminal ACTION_ESCAPE: EscAny;
+terminal ACTION_STRING_LITERAL: DQuoteLiteral;
+terminal ACTION_CHAR_LITERAL: SQuoteLiteral;
+terminal ACTION_DOC_COMMENT: DocComment;
+terminal ACTION_BLOCK_COMMENT: BlockComment;
+terminal ACTION_LINE_COMMENT: LineComment;
+terminal END_ACTION: RBrace;
+terminal ACTION_CONTENT: .;
+
+// -------------------------
+//mode LexerCharSet;
+terminal LEXER_CHAR_SET_BODY: (!/[ \]\\]/ | EscAny)+;
+terminal LEXER_CHAR_SET: RBrack;
+
+// ------------------------------------------------------------------------------
+// Grammar specific Keywords, Punctuation, etc.
+terminal fragment Id: NameStartChar NameChar*;
+
 
 
 // ======================================================
