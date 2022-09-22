@@ -3,10 +3,10 @@
  * DO NOT EDIT MANUALLY!
  ******************************************************************************/
 
-import { loadGrammar, Grammar } from 'langium';
+import { loadGrammarFromJson, Grammar } from 'langium';
 
 let loadedAntlr4Grammar: Grammar | undefined;
-export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ||(loadedAntlr4Grammar = loadGrammar(`{
+export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4Grammar = loadGrammarFromJson(`{
   "$type": "Grammar",
   "isDeclared": true,
   "name": "Antlr4",
@@ -15,7 +15,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ||(loadedAntlr4G
       "$type": "ParserRule",
       "name": "Model",
       "entry": true,
-      "alternatives": {
+      "definition": {
         "$type": "Alternatives",
         "elements": [
           {
@@ -54,7 +54,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ||(loadedAntlr4G
     {
       "$type": "ParserRule",
       "name": "Person",
-      "alternatives": {
+      "definition": {
         "$type": "Group",
         "elements": [
           {
@@ -85,7 +85,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ||(loadedAntlr4G
     {
       "$type": "ParserRule",
       "name": "Greeting",
-      "alternatives": {
+      "definition": {
         "$type": "Group",
         "elements": [
           {
@@ -128,7 +128,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ||(loadedAntlr4G
       "$type": "TerminalRule",
       "hidden": true,
       "name": "WS",
-      "terminal": {
+      "definition": {
         "$type": "RegexToken",
         "regex": "\\\\s+"
       },
@@ -137,7 +137,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ||(loadedAntlr4G
     {
       "$type": "TerminalRule",
       "name": "ID",
-      "terminal": {
+      "definition": {
         "$type": "RegexToken",
         "regex": "[_a-zA-Z][\\\\w_]*"
       },
@@ -151,7 +151,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ||(loadedAntlr4G
         "$type": "ReturnType",
         "name": "number"
       },
-      "terminal": {
+      "definition": {
         "$type": "RegexToken",
         "regex": "[0-9]+"
       },
@@ -161,7 +161,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ||(loadedAntlr4G
     {
       "$type": "TerminalRule",
       "name": "STRING",
-      "terminal": {
+      "definition": {
         "$type": "RegexToken",
         "regex": "\\"[^\\"]*\\"|'[^']*'"
       },
@@ -172,7 +172,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ||(loadedAntlr4G
       "$type": "TerminalRule",
       "hidden": true,
       "name": "ML_COMMENT",
-      "terminal": {
+      "definition": {
         "$type": "RegexToken",
         "regex": "\\\\/\\\\*[\\\\s\\\\S]*?\\\\*\\\\/"
       },
@@ -182,7 +182,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ||(loadedAntlr4G
       "$type": "TerminalRule",
       "hidden": true,
       "name": "SL_COMMENT",
-      "terminal": {
+      "definition": {
         "$type": "RegexToken",
         "regex": "\\\\/\\\\/[^\\\\n\\\\r]*"
       },

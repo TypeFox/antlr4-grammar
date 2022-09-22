@@ -5,7 +5,7 @@
 
 /* eslint-disable @typescript-eslint/array-type */
 /* eslint-disable @typescript-eslint/no-empty-interface */
-import { AstNode, AstReflection, Reference, isAstNode, TypeMetaData } from 'langium';
+import { AstNode, AstReflection, Reference, ReferenceInfo, isAstNode, TypeMetaData } from 'langium';
 
 export interface Greeting extends AstNode {
     readonly $container: Model;
@@ -42,8 +42,6 @@ export function isPerson(item: unknown): item is Person {
 
 export type Antlr4AstType = 'Greeting' | 'Model' | 'Person';
 
-export type Antlr4AstReference = 'Greeting:person';
-
 export class Antlr4AstReflection implements AstReflection {
 
     getAllTypes(): string[] {
@@ -65,7 +63,8 @@ export class Antlr4AstReflection implements AstReflection {
         }
     }
 
-    getReferenceType(referenceId: Antlr4AstReference): string {
+    getReferenceType(refInfo: ReferenceInfo): string {
+        const referenceId = `${refInfo.container.$type}:${refInfo.property}`;
         switch (referenceId) {
             case 'Greeting:person': {
                 return Person;
