@@ -1,0 +1,3 @@
+[submodule "Langium"]
+	path = langium
+	url = https://github.com/langium/langium
