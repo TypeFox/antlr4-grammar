@@ -1,0 +1,12 @@
+{
+    "projectName": "Antlr4",
+    "languages": [{
+        "id": "antlr-4",
+        "grammar": "src/language-server/antlr-4.langium",
+        "fileExtensions": [".g4"],
+        "textMate": {
+            "out": "syntaxes/antlr-4.tmLanguage.json"
+        }
+    }],
+    "out": "src/language-server/generated"
+}

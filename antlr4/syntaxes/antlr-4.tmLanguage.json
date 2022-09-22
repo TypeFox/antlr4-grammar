@@ -1,0 +1,57 @@
+{
+  "name": "antlr-4",
+  "scopeName": "source.antlr-4",
+  "fileTypes": [
+    ".g4"
+  ],
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "name": "keyword.control.antlr-4",
+      "match": "\\b(Hello|person)\\b"
+    },
+    {
+      "name": "string.quoted.double.antlr-4",
+      "begin": "\"",
+      "end": "\""
+    },
+    {
+      "name": "string.quoted.single.antlr-4",
+      "begin": "'",
+      "end": "'"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.block.antlr-4",
+          "begin": "/\\*",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.antlr-4"
+            }
+          },
+          "end": "\\*/",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.antlr-4"
+            }
+          }
+        },
+        {
+          "begin": "//",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.whitespace.comment.leading.antlr-4"
+            }
+          },
+          "end": "(?=$)",
+          "name": "comment.line.antlr-4"
+        }
+      ]
+    }
+  }
+}
