@@ -1,13 +1,171 @@
 grammar Antlr4
 
-entry Model:
-    (persons+=Person | greetings+=Greeting)*;
+entry GrammarSpec: grammarDecl=GrammarDecl prequels+=PrequelConstruct* rules=Rules specs+=ModeSpec*;
+GrammarDecl: type=GrammarType name=IdentifierRef SEMI;
+GrammarType: (lexer?=LEXER GRAMMAR | parser?=PARSER GRAMMAR | mixed?=GRAMMAR);
 
-Person:
-    'person' name=ID;
+// This is the list of all constructs that can be declared before
+// the set of rules that compose the grammar, and is invoked 0..n
+// times by the grammarPrequel rule.
+PrequelConstruct: options=OptionsSpec | grammars=DelegateGrammars | tokens=TokensSpec | channels=ChannelsSpec | action=Action_;
 
-Greeting:
-    'Hello' person=[Person:ID] '!';
+// ------------
+// Options - things that affect analysis and/or code generation
+OptionsSpec: OPTIONS (options+=Option SEMI)* RBRACE;
+Option: name=IdentifierRef ASSIGN value=OptionValue;
+OptionValue
+   : ids+=IdentifierRef (DOT ids+=IdentifierRef)*
+   | string=STRING_LITERAL
+   | action=ActionBlock
+   | number=INT
+   ;
+
+// ------------
+// Delegates
+DelegateGrammars: IMPORT grammars+=DelegateGrammar (COMMA grammars+=DelegateGrammar)* SEMI;
+DelegateGrammar: alias=IdentifierRef ASSIGN name=IdentifierRef | name=IdentifierRef;
+
+// ------------
+// Tokens & Channels
+TokensSpec: TOKENS list=IdList? RBRACE;
+ChannelsSpec: CHANNELS list=IdList? RBRACE;
+IdList: ids+=IdentifierRef (COMMA ids+=IdentifierRef)* COMMA?;
+
+// Match stuff like @parser::members {int i;}
+Action_: AT (scopeName=ActionScopeName COLONCOLON)? name=IdentifierRef block=ActionBlock;
+
+// Scope names could collide with keywords; allow them as ids for action scopes
+ActionScopeName: name=IdentifierRef | lexer?=LEXER | parser?=PARSER;
+ActionBlock: BEGIN_ACTION contents+=ACTION_CONTENT* END_ACTION;
+ArgActionBlock: BEGIN_ARGUMENT contents+=ARGUMENT_CONTENT* END_ARGUMENT;
+ModeSpec: MODE name=IdentifierRef SEMI rules+=LexerRuleSpec*;
+Rules: rules+=RuleSpec*;
+RuleSpec: rule=ParserRuleSpec | rule=LexerRuleSpec;
+ParserRuleSpec: modifiers=RuleModifiers? rule=[RuleSpec:ID] block=ArgActionBlock? return=RuleReturns? throws=ThrowsSpec? locals=LocalsSpec? prequals+=RulePrequel* COLON ruleBlock=RuleBlock SEMI exceptionGroup=ExceptionGroup;
+ExceptionGroup: handlers+=ExceptionHandler* finally=FinallyClause?;
+ExceptionHandler: CATCH argAction=ArgActionBlock action=ActionBlock;
+FinallyClause: FINALLY action=ActionBlock;
+RulePrequel: options=OptionsSpec | action=RuleAction;
+RuleReturns: RETURNS argAction=ArgActionBlock;
+
+// --------------
+// Exception spec
+ThrowsSpec: THROWS exceptions+=IdentifierRef (COMMA exceptions+=IdentifierRef)*;
+LocalsSpec: LOCALS argAction=ArgActionBlock;
+
+/** Match stuff like @init {int i;} */
+RuleAction: AT name=IdentifierRef action=ActionBlock;
+RuleModifiers: modifiers+=RuleModifier+;
+
+// An individual access modifier for a rule. The 'fragment' modifier
+// is an internal indication for lexer rules that they do not match
+// from the input but are like subroutines for other lexer rules to
+// reuse for certain lexical patterns. The other modifiers are passed
+// to the code generation templates and may be ignored by the template
+// if they are of no use in that language.
+RuleModifier: public?=PUBLIC | private?=PRIVATE | protected?=PROTECTED | fragment?=FRAGMENT;
+RuleBlock: list=RuleAltList;
+RuleAltList: alts+=LabeledAlt (OR alts+=LabeledAlt)*;
+LabeledAlt: alt=Alternative (POUND id=IdentifierRef)?;
+
+// --------------------
+// Lexer rules
+LexerRuleSpec: fragment?=FRAGMENT? name=ID options=OptionsSpec? COLON block=LexerRuleBlock SEMI;
+LexerRuleBlock: LexerAltList;
+LexerAltList: alts+=LexerAlt (OR alts+=LexerAlt)*;
+LexerAlt: (elements=LexerElements cmds=LexerCommands?)?;
+LexerElements: elements+=LexerElement*;
+LexerElement
+   : lexerElement=LabeledLexerElement suffix=EbnfSuffix?
+   | atom=LexerAtom suffix=EbnfSuffix?
+   | block=LexerBlock suffix=EbnfSuffix?
+   | action=ActionBlock question?=QUESTION?
+   ;
+   // but preds can be anywhere
+LabeledLexerElement: name=IdentifierRef op=(ASSIGN | PLUS_ASSIGN) elements=(LexerAtom | LexerBlock);
+LexerBlock: LPAREN list=LexerAltList RPAREN;
+   // E.g., channel(HIDDEN), skip, more, mode(INSIDE), push(INSIDE), pop
+LexerCommands: RARROW cmds+=LexerCommand (COMMA cmds+=LexerCommand)*;
+LexerCommand: name=LexerCommandName LPAREN expr=LexerCommandExpr RPAREN
+            | name=LexerCommandName
+            ;
+LexerCommandName: IdentifierRef | MODE;
+LexerCommandExpr: IdentifierRef | INT;
+
+// --------------------
+// Rule Alts
+AltList: alts+=Alternative (OR alts+=Alternative)*;
+Alternative: (options+=ElementOptions? elements+=Element+)?;
+
+Element
+   : element=LabeledElement suffix=EbnfSuffix?
+   | atom=Atom suffix=EbnfSuffix?
+   | ebnf=Ebnf
+   | block=ActionBlock question?=QUESTION?
+   ;
+
+LabeledElement: name=IdentifierRef op=(ASSIGN | PLUS_ASSIGN) element=(Atom | Block);
+
+// --------------------
+// EBNF and blocks
+Ebnf
+   : block=Block suffix=BlockSuffix?
+   ;
+
+BlockSuffix
+   : EbnfSuffix
+   ;
+
+EbnfSuffix
+   : op?=QUESTION question?=QUESTION?
+   | op=STAR question?=QUESTION?
+   | op=PLUS question?=QUESTION?
+   ;
+
+LexerAtom
+   : chars=CharacterRange
+   | terminal=Terminal
+   | notSet=NotSet
+   | charset=LEXER_CHAR_SET
+   | DOT options=ElementOptions?
+   ;
+
+Atom
+   : terminal=Terminal
+   | ruleRef=RuleRef
+   | notSet=NotSet
+   | DOT options=ElementOptions?
+   ;
+
+// --------------------
+// Inverted element set
+NotSet: NOT element=SetElement | NOT set=BlockSet;
+BlockSet: LPAREN elements+=SetElement (OR elements+=SetElement)* RPAREN;
+SetElement
+   : token=[LexerRuleSpec:ID] options=ElementOptions?
+   | STRING_LITERAL options=ElementOptions?
+   | range=CharacterRange
+   | charset=LEXER_CHAR_SET
+   ;
+
+// -------------
+// Grammar Block
+Block: LPAREN (options=OptionsSpec? actions+=RuleAction* COLON)? list=AltList RPAREN;
+
+// ----------------
+// Parser rule ref
+RuleRef: rule=[RuleSpec:ID] actions=ArgActionBlock? options=ElementOptions?;
+
+// ---------------
+// Character Range
+CharacterRange: left=STRING_LITERAL RANGE right=STRING_LITERAL;
+Terminal: token=[LexerRuleSpec:ID] options=ElementOptions? | string=STRING_LITERAL options=ElementOptions?;
+
+// Terminals may be adorned with certain options when
+// reference in the grammar: TOK<,,,>
+ElementOptions: LT element+=ElementOption (COMMA element+=ElementOption)* GT;
+ElementOption: IdentifierRef | IdentifierRef ASSIGN (IdentifierRef | STRING_LITERAL);
+IdentifierRef: parserRule=[ParserRuleSpec:ID] | tokenRule=[LexerRuleSpec:ID];
 
 // ======================================================
 // Lexer specification
@@ -52,7 +210,7 @@ terminal BEGIN_ACTION: LBrace; //TODO -> pushMode (TargetLanguageAction);
 // 'options', 'tokens', and 'channels' are considered keywords
 // but only when followed by '{', and considered as a single token.
 // Otherwise, the symbols are tokenized as RULE_REF and allowed as
-// an identifier in a labeledElement.
+// an Identifier in a labeledElement.
 terminal OPTIONS      : 'options'  WSNLCHARS* '{'  ;
 terminal TOKENS       : 'tokens'   WSNLCHARS* '{'  ;
 terminal CHANNELS     : 'channels' WSNLCHARS* '{'  ;
@@ -143,8 +301,6 @@ terminal END_ARGUMENT
    : RBrack
    ;
 
-terminal ARGUMENT_CONTENT: /./;
-
 // TODO: This grammar and the one used in the Intellij Antlr4 plugin differ
 // for "actions". This needs to be resolved at some point.
 // The Intellij Antlr4 grammar is here:
@@ -160,26 +316,18 @@ terminal ARGUMENT_CONTENT: /./;
 // that they are delimited by ' or " and so consume these
 // in their own alts so as not to inadvertantly match {}.
 // mode TargetLanguageAction;
-terminal NESTED_ACTION: LBrace;
-terminal ACTION_ESCAPE: EscAny;
-terminal ACTION_STRING_LITERAL: DQuoteLiteral;
-terminal ACTION_CHAR_LITERAL: SQuoteLiteral;
-terminal ACTION_DOC_COMMENT: DocComment;
-terminal ACTION_BLOCK_COMMENT: BlockComment;
-terminal ACTION_LINE_COMMENT: LineComment;
+terminal ARGUMENT_CONTENT: .;
 terminal END_ACTION: RBrace;
-terminal ACTION_CONTENT: .;
+terminal ACTION_CONTENT: LBrace | EscAny | DQuoteLiteral | SQuoteLiteral | DocComment | BlockComment | LineComment;
 
 // -------------------------
 //mode LexerCharSet;
-terminal LEXER_CHAR_SET_BODY: (!/[ \]\\]/ | EscAny)+;
+terminal LEXER_CHAR_SET_BODY: (/[^ \]\\]/ | EscAny)+;
 terminal LEXER_CHAR_SET: RBrack;
 
 // ------------------------------------------------------------------------------
 // Grammar specific Keywords, Punctuation, etc.
 terminal fragment Id: NameStartChar NameChar*;
-
-
 
 // ======================================================
 // Lexer fragments
