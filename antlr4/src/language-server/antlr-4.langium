@@ -36,11 +36,27 @@ Action_: AT (scopeName=ActionScopeName COLONCOLON)? name=IdentifierRef block=Act
 
 // Scope names could collide with keywords; allow them as ids for action scopes
 ActionScopeName: name=IdentifierRef | lexer?=LEXER | parser?=PARSER;
-ActionBlock: BEGIN_ACTION contents+=ACTION_CONTENT* END_ACTION;
-ArgActionBlock: BEGIN_ARGUMENT contents+=ARGUMENT_CONTENT* END_ARGUMENT;
+ActionBlock: BEGIN_ACTION contents+=ActionContent* RBRACE;
+ActionContent returns string:
+   BEGIN_ACTION
+   | ESCAPE
+   | DQUOTE_STRING_LITERAL
+   | STRING_LITERAL
+   | RBRACE
+   | ANY_CONTENT
+   ;
+ArgActionBlock: BEGIN_ARGUMENT contents+=ArgumentContent* RBRACK;
+ArgumentContent returns string:
+    BEGIN_ARGUMENT
+    | ESCAPE
+    | DQUOTE_STRING_LITERAL
+    | STRING_LITERAL
+    | RBRACK
+    | ANY_CONTENT
+    ;
 ModeSpec: MODE name=IdentifierRef SEMI rules+=LexerRuleSpec*;
 Rules: rules+=RuleSpec*;
-RuleSpec: rule=ParserRuleSpec | rule=LexerRuleSpec;
+RuleSpec: rule=(ParserRuleSpec | LexerRuleSpec);
 ParserRuleSpec: modifiers=RuleModifiers? rule=[RuleSpec:ID] block=ArgActionBlock? return=RuleReturns? throws=ThrowsSpec? locals=LocalsSpec? prequals+=RulePrequel* COLON ruleBlock=RuleBlock SEMI exceptionGroup=ExceptionGroup;
 ExceptionGroup: handlers+=ExceptionHandler* finally=FinallyClause?;
 ExceptionHandler: CATCH argAction=ArgActionBlock action=ActionBlock;
@@ -126,7 +142,6 @@ LexerAtom
    : chars=CharacterRange
    | terminal=Terminal
    | notSet=NotSet
-   | charset=LEXER_CHAR_SET
    | DOT options=ElementOptions?
    ;
 
@@ -145,7 +160,6 @@ SetElement
    : token=[LexerRuleSpec:ID] options=ElementOptions?
    | STRING_LITERAL options=ElementOptions?
    | range=CharacterRange
-   | charset=LEXER_CHAR_SET
    ;
 
 // -------------
@@ -164,8 +178,18 @@ Terminal: token=[LexerRuleSpec:ID] options=ElementOptions? | string=STRING_LITER
 // Terminals may be adorned with certain options when
 // reference in the grammar: TOK<,,,>
 ElementOptions: LT element+=ElementOption (COMMA element+=ElementOption)* GT;
-ElementOption: IdentifierRef | IdentifierRef ASSIGN (IdentifierRef | STRING_LITERAL);
-IdentifierRef: parserRule=[ParserRuleSpec:ID] | tokenRule=[LexerRuleSpec:ID];
+ElementOption: ref=IdentifierRef (ASSIGN value=(IdentifierRef | STRING_LITERAL))?;
+IdentifierRef: ruleRef=[RuleSpec:ID];
+
+
+
+
+
+
+
+
+
+
 
 // ======================================================
 // Lexer specification
@@ -198,11 +222,11 @@ terminal UNTERMINATED_STRING_LITERAL: USQuoteLiteral;
 // Certain argument lists, such as those specifying call parameters
 // to a rule invocation, or input parameters to a rule specification
 // are contained within square brackets.
-terminal BEGIN_ARGUMENT: LBrack; //TODO  { this.handleBeginArgument(); }
+terminal BEGIN_ARGUMENT: LBrack;  // -> pushMode (TargetLanguageAction)
 
 // -------------------------
 // Target Language Actions
-terminal BEGIN_ACTION: LBrace; //TODO -> pushMode (TargetLanguageAction);
+terminal BEGIN_ACTION: LBrace; // -> pushMode (TargetLanguageAction);
 
 // -------------------------
 // Keywords
@@ -238,8 +262,8 @@ terminal COMMA: Comma;
 terminal SEMI: Semi;
 terminal LPAREN: LParen;
 terminal RPAREN: RParen;
-terminal LBRACE: LBrace;
 terminal RBRACE: RBrace;
+terminal RBRACK: RBrack;
 terminal RARROW: RArrow;
 terminal LT: Lt;
 terminal GT: Gt;
@@ -279,32 +303,9 @@ hidden terminal WS: Ws+;
 // Lexer modes
 // -------------------------
 // Arguments
-// mode Argument;
+//mode Argument;
 // E.g., [int x, List<String> a[]]
-terminal NESTED_ARGUMENT
-   : LBrack
-   ;
-
-terminal ARGUMENT_ESCAPE
-   : EscAny
-   ;
-
-terminal ARGUMENT_STRING_LITERAL
-   : DQuoteLiteral
-   ;
-
-terminal ARGUMENT_CHAR_LITERAL
-   : SQuoteLiteral
-   ;
-
-terminal END_ARGUMENT
-   : RBrack
-   ;
-
-// TODO: This grammar and the one used in the Intellij Antlr4 plugin differ
-// for "actions". This needs to be resolved at some point.
-// The Intellij Antlr4 grammar is here:
-// https://github.com/antlr/intellij-plugin-v4/blob/1f36fde17f7fa63cb18d7eeb9cb213815ac658fb/src/main/antlr/org/antlr/intellij/plugin/parser/ANTLRv4Lexer.g4#L587
+terminal ESCAPE: EscAny;
 
 // -------------------------
 // Target Language Actions
@@ -315,15 +316,10 @@ terminal END_ARGUMENT
 // literal string representation in the target language. We assume
 // that they are delimited by ' or " and so consume these
 // in their own alts so as not to inadvertantly match {}.
-// mode TargetLanguageAction;
-terminal ARGUMENT_CONTENT: .;
-terminal END_ACTION: RBrace;
-terminal ACTION_CONTENT: LBrace | EscAny | DQuoteLiteral | SQuoteLiteral | DocComment | BlockComment | LineComment;
 
-// -------------------------
-//mode LexerCharSet;
-terminal LEXER_CHAR_SET_BODY: (/[^ \]\\]/ | EscAny)+;
-terminal LEXER_CHAR_SET: RBrack;
+// mode TargetLanguageAction;
+terminal DQUOTE_STRING_LITERAL: DQuoteLiteral;
+terminal ANY_CONTENT: /[^ ]/;
 
 // ------------------------------------------------------------------------------
 // Grammar specific Keywords, Punctuation, etc.
@@ -370,7 +366,7 @@ terminal fragment USQuoteLiteral: SQuote (EscSeq | /[^'\r\n\\]/)*;
 // -----------------------------------
 // Character ranges
 terminal fragment NameChar: NameStartChar
-   | '0'..'9'
+   | /[0-9]/
    | Underscore
    | '\u00B7'
    | /[\u0300-\u036F]/
@@ -378,8 +374,7 @@ terminal fragment NameChar: NameStartChar
    ;
 
 terminal fragment   NameStartChar
-   : 'A' .. 'Z'
-   | 'a' .. 'z'
+   : /[A-Za-z]/
    | /[\u00C0-\u00D6]/
    | /[\u00D8-\u00F6]/
    | /[\u00F8-\u02FF]/
