@@ -57,7 +57,9 @@ ArgumentContent returns string:
 ModeSpec: MODE name=IdentifierRef SEMI rules+=LexerRuleSpec*;
 Rules: rules+=RuleSpec*;
 RuleSpec: rule=(ParserRuleSpec | LexerRuleSpec);
-ParserRuleSpec: modifiers=RuleModifiers? rule=[RuleSpec:ID] block=ArgActionBlock? return=RuleReturns? throws=ThrowsSpec? locals=LocalsSpec? prequals+=RulePrequel* COLON ruleBlock=RuleBlock SEMI exceptionGroup=ExceptionGroup;
+
+ParserRuleSpec: modifiers=RuleModifiers? name=ID block=ArgActionBlock? return=RuleReturns? throws=ThrowsSpec? locals=LocalsSpec? prequals+=RulePrequel* COLON ruleBlock=RuleBlock SEMI exceptionGroup=ExceptionGroup;
+
 ExceptionGroup: handlers+=ExceptionHandler* finally=FinallyClause?;
 ExceptionHandler: CATCH argAction=ArgActionBlock action=ActionBlock;
 FinallyClause: FINALLY action=ActionBlock;
@@ -146,8 +148,8 @@ LexerAtom
    ;
 
 Atom
-   : terminal=Terminal
-   | ruleRef=RuleRef
+   : ruleRef=RuleRef
+   //| terminal=Terminal //already containes in RuleRef
    | notSet=NotSet
    | DOT options=ElementOptions?
    ;
@@ -158,8 +160,8 @@ NotSet: NOT element=SetElement | NOT set=BlockSet;
 BlockSet: LPAREN elements+=SetElement (OR elements+=SetElement)* RPAREN;
 SetElement
    : token=[LexerRuleSpec:ID] options=ElementOptions?
-   | STRING_LITERAL options=ElementOptions?
    | range=CharacterRange
+   | STRING_LITERAL options=ElementOptions?
    ;
 
 // -------------
