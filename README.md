@@ -1,5 +1,7 @@
-# antlr4-langium-transpiler
+# antlr4-grammar
 
-1. write a ANTLR4 parser
-2. ???
-3. profit
+This repository uses Git submodules. So do your `git clone` with the flag `--recurse-submodules` to checkout the dependencies as well.
+
+```
+git clone https://github.com/langium/antlr4-grammar --recurse-submodules
+```
