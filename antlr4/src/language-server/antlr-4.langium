@@ -58,7 +58,7 @@ ModeSpec: MODE name=IdentifierRef SEMI rules+=LexerRuleSpec*;
 Rules: rules+=RuleSpec*;
 RuleSpec: rule=(ParserRuleSpec | LexerRuleSpec);
 
-ParserRuleSpec: modifiers=RuleModifiers? name=ID block=ArgActionBlock? return=RuleReturns? throws=ThrowsSpec? locals=LocalsSpec? prequals+=RulePrequel* COLON ruleBlock=RuleBlock SEMI exceptionGroup=ExceptionGroup;
+ParserRuleSpec: modifiers=RuleModifiers? name=PARSER_RULE_ID block=ArgActionBlock? return=RuleReturns? throws=ThrowsSpec? locals=LocalsSpec? prequals+=RulePrequel* COLON ruleBlock=RuleBlock SEMI exceptionGroup=ExceptionGroup;
 
 ExceptionGroup: handlers+=ExceptionHandler* finally=FinallyClause?;
 ExceptionHandler: CATCH argAction=ArgActionBlock action=ActionBlock;
@@ -88,7 +88,7 @@ LabeledAlt: alt=Alternative (POUND id=IdentifierRef)?;
 
 // --------------------
 // Lexer rules
-LexerRuleSpec: fragment?=FRAGMENT? name=ID options=OptionsSpec? COLON block=LexerRuleBlock SEMI;
+LexerRuleSpec: fragment?=FRAGMENT? name=LEXER_RULE_ID options=OptionsSpec? COLON block=LexerRuleBlock SEMI;
 LexerRuleBlock: LexerAltList;
 LexerAltList: alts+=LexerAlt (OR alts+=LexerAlt)*;
 LexerAlt: (elements=LexerElements cmds=LexerCommands?)?;
@@ -149,7 +149,6 @@ LexerAtom
 
 Atom
    : ruleRef=RuleRef
-   //| terminal=Terminal //already containes in RuleRef
    | notSet=NotSet
    | DOT options=ElementOptions?
    ;
@@ -159,7 +158,7 @@ Atom
 NotSet: NOT element=SetElement | NOT set=BlockSet;
 BlockSet: LPAREN elements+=SetElement (OR elements+=SetElement)* RPAREN;
 SetElement
-   : token=[LexerRuleSpec:ID] options=ElementOptions?
+   : token=[LexerRuleSpec:LEXER_RULE_ID] options=ElementOptions?
    | range=CharacterRange
    | STRING_LITERAL options=ElementOptions?
    ;
@@ -170,18 +169,21 @@ Block: LPAREN (options=OptionsSpec? actions+=RuleAction* COLON)? list=AltList RP
 
 // ----------------
 // Parser rule ref
-RuleRef: rule=[RuleSpec:ID] actions=ArgActionBlock? options=ElementOptions?;
+RuleRef: ruleRef=IdentifierRef actions=ArgActionBlock? options=ElementOptions?;
 
 // ---------------
 // Character Range
 CharacterRange: left=STRING_LITERAL RANGE right=STRING_LITERAL;
-Terminal: token=[LexerRuleSpec:ID] options=ElementOptions? | string=STRING_LITERAL options=ElementOptions?;
+Terminal: token=[LexerRuleSpec:LEXER_RULE_ID] options=ElementOptions? | string=STRING_LITERAL options=ElementOptions?;
 
 // Terminals may be adorned with certain options when
 // reference in the grammar: TOK<,,,>
 ElementOptions: LT element+=ElementOption (COMMA element+=ElementOption)* GT;
 ElementOption: ref=IdentifierRef (ASSIGN value=(IdentifierRef | STRING_LITERAL))?;
-IdentifierRef: ruleRef=[RuleSpec:ID];
+IdentifierRef
+   : parserRuleRef=[ParserRuleSpec:PARSER_RULE_ID]
+   | lexerRuleRef=[LexerRuleSpec:LEXER_RULE_ID]
+   ;
 
 
 
@@ -284,7 +286,8 @@ terminal NOT: Tilde;
 
 // -------------------------
 // Identifiers - allows unicode rule/token names
-terminal ID: Id;
+terminal LEXER_RULE_ID: LexerRuleId;
+terminal PARSER_RULE_ID: ParserRuleId;
 
 // -------------------------
 // Whitespace
@@ -325,7 +328,8 @@ terminal ANY_CONTENT: /[^ ]/;
 
 // ------------------------------------------------------------------------------
 // Grammar specific Keywords, Punctuation, etc.
-terminal fragment Id: NameStartChar NameChar*;
+terminal fragment ParserRuleId: UpperNameStartChar NameChar*;
+terminal fragment LexerRuleId: LowerNameStartChar NameChar*;
 
 // ======================================================
 // Lexer fragments
@@ -367,30 +371,35 @@ terminal fragment USQuoteLiteral: SQuote (EscSeq | /[^'\r\n\\]/)*;
 
 // -----------------------------------
 // Character ranges
-terminal fragment NameChar: NameStartChar
+terminal fragment NameChar
+   : LowerNameStartChar
+   | UpperNameStartChar
    | /[0-9]/
    | Underscore
-   | '\u00B7'
-   | /[\u0300-\u036F]/
-   | /[\u203F-\u2040]/
+//   | '\u00B7'
+//   | /[\u0300-\u036F]/
+//   | /[\u203F-\u2040]/
    ;
 
-terminal fragment   NameStartChar
-   : /[A-Za-z]/
-   | /[\u00C0-\u00D6]/
-   | /[\u00D8-\u00F6]/
-   | /[\u00F8-\u02FF]/
-   | /[\u0370-\u037D]/
-   | /[\u037F-\u1FFF]/
-   | /[\u200C-\u200D]/
-   | /[\u2070-\u218F]/
-   | /[\u2C00-\u2FEF]/
-   | /[\u3001-\uD7FF]/
-   | /[\uF900-\uFDCF]/
-   | /[\uFDF0-\uFFFD]/
+terminal fragment LowerNameStartChar
+   : /[a-z]/
    ;
-
+terminal fragment UpperNameStartChar
+   : /[A-Z]/
+   ;
+//   | /[\u00C0-\u00D6]/
+//   | /[\u00D8-\u00F6]/
+//   | /[\u00F8-\u02FF]/
+//   | /[\u0370-\u037D]/
+//   | /[\u037F-\u1FFF]/
+//   | /[\u200C-\u200D]/
+//   | /[\u2070-\u218F]/
+//   | /[\u2C00-\u2FEF]/
+//   | /[\u3001-\uD7FF]/
+//   | /[\uF900-\uFDCF]/
+//   | /[\uFDF0-\uFFFD]/
 // ignores | ['\u10000-'\uEFFFF] ;
+
 // -----------------------------------
 // Types
 terminal fragment Int: 'int';
