@@ -339,7 +339,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "IdentifierRef"
+                "$refText": "LEXER_RULE_ID"
               },
               "arguments": []
             }
@@ -388,7 +388,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$refText": "IdentifierRef"
+                    "$refText": "LEXER_RULE_ID"
                   },
                   "arguments": []
                 }
@@ -410,7 +410,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
                     "terminal": {
                       "$type": "RuleCall",
                       "rule": {
-                        "$refText": "IdentifierRef"
+                        "$refText": "LEXER_RULE_ID"
                       },
                       "arguments": []
                     }
@@ -547,7 +547,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$refText": "IdentifierRef"
+                    "$refText": "LEXER_RULE_ID"
                   },
                   "arguments": []
                 }
@@ -566,7 +566,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$refText": "IdentifierRef"
+                    "$refText": "LEXER_RULE_ID"
                   },
                   "arguments": []
                 }
@@ -580,7 +580,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "IdentifierRef"
+                "$refText": "LEXER_RULE_ID"
               },
               "arguments": []
             }
@@ -689,11 +689,18 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "feature": "ids",
             "operator": "+=",
             "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$refText": "IdentifierRef"
+              "$type": "CrossReference",
+              "type": {
+                "$refText": "ModeSpec"
               },
-              "arguments": []
+              "terminal": {
+                "$type": "RuleCall",
+                "rule": {
+                  "$refText": "LEXER_RULE_ID"
+                },
+                "arguments": []
+              },
+              "deprecatedSyntax": false
             }
           },
           {
@@ -711,11 +718,18 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
                 "feature": "ids",
                 "operator": "+=",
                 "terminal": {
-                  "$type": "RuleCall",
-                  "rule": {
-                    "$refText": "IdentifierRef"
+                  "$type": "CrossReference",
+                  "type": {
+                    "$refText": "ModeSpec"
                   },
-                  "arguments": []
+                  "terminal": {
+                    "$type": "RuleCall",
+                    "rule": {
+                      "$refText": "LEXER_RULE_ID"
+                    },
+                    "arguments": []
+                  },
+                  "deprecatedSyntax": false
                 }
               }
             ],
@@ -783,7 +797,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "IdentifierRef"
+                "$refText": "LEXER_RULE_ID"
               },
               "arguments": []
             }
@@ -822,7 +836,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "IdentifierRef"
+                "$refText": "LEXER_RULE_ID"
               },
               "arguments": []
             }
@@ -1080,7 +1094,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "IdentifierRef"
+                "$refText": "LEXER_RULE_ID"
               },
               "arguments": []
             }
@@ -1528,7 +1542,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "IdentifierRef"
+                "$refText": "LEXER_RULE_ID"
               },
               "arguments": []
             }
@@ -1550,7 +1564,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$refText": "IdentifierRef"
+                    "$refText": "LEXER_RULE_ID"
                   },
                   "arguments": []
                 }
@@ -1621,7 +1635,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "IdentifierRef"
+                "$refText": "PARSER_RULE_ID"
               },
               "arguments": []
             }
@@ -1842,7 +1856,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$refText": "IdentifierRef"
+                    "$refText": "LEXER_RULE_ID"
                   },
                   "arguments": []
                 }
@@ -2219,7 +2233,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "IdentifierRef"
+                "$refText": "PARSER_RULE_ID"
               },
               "arguments": []
             }
@@ -4473,7 +4487,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "definition": {
         "$type": "TerminalRuleCall",
         "rule": {
-          "$refText": "LexerRuleId"
+          "$refText": "UpperCaseId"
         }
       },
       "fragment": false,
@@ -4485,7 +4499,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "definition": {
         "$type": "TerminalRuleCall",
         "rule": {
-          "$refText": "ParserRuleId"
+          "$refText": "LowerCaseId"
         }
       },
       "fragment": false,
@@ -4541,14 +4555,14 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     {
       "$type": "TerminalRule",
       "fragment": true,
-      "name": "ParserRuleId",
+      "name": "LowerCaseId",
       "definition": {
         "$type": "TerminalGroup",
         "elements": [
           {
             "$type": "TerminalRuleCall",
             "rule": {
-              "$refText": "UpperNameStartChar"
+              "$refText": "LowerNameStartChar"
             }
           },
           {
@@ -4565,14 +4579,14 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     {
       "$type": "TerminalRule",
       "fragment": true,
-      "name": "LexerRuleId",
+      "name": "UpperCaseId",
       "definition": {
         "$type": "TerminalGroup",
         "elements": [
           {
             "$type": "TerminalRuleCall",
             "rule": {
-              "$refText": "LowerNameStartChar"
+              "$refText": "UpperNameStartChar"
             }
           },
           {

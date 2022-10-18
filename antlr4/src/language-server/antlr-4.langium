@@ -12,9 +12,9 @@ PrequelConstruct: options=OptionsSpec | grammars=DelegateGrammars | tokens=Token
 // ------------
 // Options - things that affect analysis and/or code generation
 OptionsSpec: OPTIONS (options+=Option SEMI)* RBRACE;
-Option: name=IdentifierRef ASSIGN value=OptionValue;
+Option: name=LEXER_RULE_ID ASSIGN value=OptionValue;
 OptionValue
-   : ids+=IdentifierRef (DOT ids+=IdentifierRef)*
+   : ids+=LEXER_RULE_ID (DOT ids+=LEXER_RULE_ID)*
    | string=STRING_LITERAL
    | action=ActionBlock
    | number=INT
@@ -23,19 +23,19 @@ OptionValue
 // ------------
 // Delegates
 DelegateGrammars: IMPORT grammars+=DelegateGrammar (COMMA grammars+=DelegateGrammar)* SEMI;
-DelegateGrammar: alias=IdentifierRef ASSIGN name=IdentifierRef | name=IdentifierRef;
+DelegateGrammar: alias=LEXER_RULE_ID ASSIGN name=LEXER_RULE_ID | name=LEXER_RULE_ID;
 
 // ------------
 // Tokens & Channels
 TokensSpec: TOKENS list=IdList? RBRACE;
 ChannelsSpec: CHANNELS list=IdList? RBRACE;
-IdList: ids+=IdentifierRef (COMMA ids+=IdentifierRef)* COMMA?;
+IdList: ids+=[ModeSpec:LEXER_RULE_ID] (COMMA ids+=[ModeSpec:LEXER_RULE_ID])* COMMA?;
 
 // Match stuff like @parser::members {int i;}
-Action_: AT (scopeName=ActionScopeName COLONCOLON)? name=IdentifierRef block=ActionBlock;
+Action_: AT (scopeName=ActionScopeName COLONCOLON)? name=LEXER_RULE_ID block=ActionBlock;
 
 // Scope names could collide with keywords; allow them as ids for action scopes
-ActionScopeName: name=IdentifierRef | lexer?=LEXER | parser?=PARSER;
+ActionScopeName: name=LEXER_RULE_ID | lexer?=LEXER | parser?=PARSER;
 ActionBlock: BEGIN_ACTION contents+=ActionContent* RBRACE;
 ActionContent returns string:
    BEGIN_ACTION
@@ -54,7 +54,7 @@ ArgumentContent returns string:
     | RBRACK
     | ANY_CONTENT
     ;
-ModeSpec: MODE name=IdentifierRef SEMI rules+=LexerRuleSpec*;
+ModeSpec: MODE name=LEXER_RULE_ID SEMI rules+=LexerRuleSpec*;
 Rules: rules+=RuleSpec*;
 RuleSpec: rule=(ParserRuleSpec | LexerRuleSpec);
 
@@ -68,11 +68,11 @@ RuleReturns: RETURNS argAction=ArgActionBlock;
 
 // --------------
 // Exception spec
-ThrowsSpec: THROWS exceptions+=IdentifierRef (COMMA exceptions+=IdentifierRef)*;
+ThrowsSpec: THROWS exceptions+=LEXER_RULE_ID (COMMA exceptions+=LEXER_RULE_ID)*;
 LocalsSpec: LOCALS argAction=ArgActionBlock;
 
 /** Match stuff like @init {int i;} */
-RuleAction: AT name=IdentifierRef action=ActionBlock;
+RuleAction: AT name=PARSER_RULE_ID action=ActionBlock;
 RuleModifiers: modifiers+=RuleModifier+;
 
 // An individual access modifier for a rule. The 'fragment' modifier
@@ -84,7 +84,7 @@ RuleModifiers: modifiers+=RuleModifier+;
 RuleModifier: public?=PUBLIC | private?=PRIVATE | protected?=PROTECTED | fragment?=FRAGMENT;
 RuleBlock: list=RuleAltList;
 RuleAltList: alts+=LabeledAlt (OR alts+=LabeledAlt)*;
-LabeledAlt: alt=Alternative (POUND id=IdentifierRef)?;
+LabeledAlt: alt=Alternative (POUND id=LEXER_RULE_ID)?;
 
 // --------------------
 // Lexer rules
@@ -100,7 +100,7 @@ LexerElement
    | action=ActionBlock question?=QUESTION?
    ;
    // but preds can be anywhere
-LabeledLexerElement: name=IdentifierRef op=(ASSIGN | PLUS_ASSIGN) elements=(LexerAtom | LexerBlock);
+LabeledLexerElement: name=PARSER_RULE_ID op=(ASSIGN | PLUS_ASSIGN) elements=(LexerAtom | LexerBlock);
 LexerBlock: LPAREN list=LexerAltList RPAREN;
    // E.g., channel(HIDDEN), skip, more, mode(INSIDE), push(INSIDE), pop
 LexerCommands: RARROW cmds+=LexerCommand (COMMA cmds+=LexerCommand)*;
@@ -286,8 +286,8 @@ terminal NOT: Tilde;
 
 // -------------------------
 // Identifiers - allows unicode rule/token names
-terminal LEXER_RULE_ID: LexerRuleId;
-terminal PARSER_RULE_ID: ParserRuleId;
+terminal LEXER_RULE_ID: UpperCaseId;
+terminal PARSER_RULE_ID: LowerCaseId;
 
 // -------------------------
 // Whitespace
@@ -328,8 +328,8 @@ terminal ANY_CONTENT: /[^ ]/;
 
 // ------------------------------------------------------------------------------
 // Grammar specific Keywords, Punctuation, etc.
-terminal fragment ParserRuleId: UpperNameStartChar NameChar*;
-terminal fragment LexerRuleId: LowerNameStartChar NameChar*;
+terminal fragment LowerCaseId: LowerNameStartChar NameChar*;
+terminal fragment UpperCaseId: UpperNameStartChar NameChar*;
 
 // ======================================================
 // Lexer fragments

@@ -46,7 +46,7 @@ export function isLexerRuleBlock(item: unknown): item is LexerRuleBlock {
 export interface Action_ extends AstNode {
     readonly $container: PrequelConstruct;
     block: ActionBlock
-    name: IdentifierRef
+    name: string
     scopeName?: ActionScopeName
 }
 
@@ -70,7 +70,7 @@ export function isActionBlock(item: unknown): item is ActionBlock {
 export interface ActionScopeName extends AstNode {
     readonly $container: Action_;
     lexer: boolean
-    name?: IdentifierRef
+    name?: string
     parser: boolean
 }
 
@@ -176,8 +176,8 @@ export function isCharacterRange(item: unknown): item is CharacterRange {
 
 export interface DelegateGrammar extends AstNode {
     readonly $container: DelegateGrammars;
-    alias?: IdentifierRef
-    name: IdentifierRef
+    alias?: string
+    name: string
 }
 
 export const DelegateGrammar = 'DelegateGrammar';
@@ -334,7 +334,7 @@ export function isGrammarType(item: unknown): item is GrammarType {
 }
 
 export interface IdentifierRef extends AstNode {
-    readonly $container: ActionScopeName | Action_ | DelegateGrammar | ElementOption | GrammarDecl | IdList | LabeledAlt | LabeledElement | LabeledLexerElement | LexerCommand | ModeSpec | Option | OptionValue | RuleAction | RuleRef | ThrowsSpec;
+    readonly $container: ElementOption | GrammarDecl | LabeledElement | LexerCommand | RuleRef;
     lexerRuleRef?: Reference<LexerRuleSpec>
     parserRuleRef?: Reference<ParserRuleSpec>
 }
@@ -347,7 +347,7 @@ export function isIdentifierRef(item: unknown): item is IdentifierRef {
 
 export interface IdList extends AstNode {
     readonly $container: ChannelsSpec | TokensSpec;
-    ids: Array<IdentifierRef>
+    ids: Array<Reference<ModeSpec>>
 }
 
 export const IdList = 'IdList';
@@ -359,7 +359,7 @@ export function isIdList(item: unknown): item is IdList {
 export interface LabeledAlt extends AstNode {
     readonly $container: RuleAltList;
     alt: Alternative
-    id?: IdentifierRef
+    id?: string
 }
 
 export const LabeledAlt = 'LabeledAlt';
@@ -384,7 +384,7 @@ export function isLabeledElement(item: unknown): item is LabeledElement {
 export interface LabeledLexerElement extends AstNode {
     readonly $container: LexerElement;
     elements: LexerAtom | LexerBlock
-    name: IdentifierRef
+    name: string
     op: string
 }
 
@@ -519,7 +519,7 @@ export function isLocalsSpec(item: unknown): item is LocalsSpec {
 
 export interface ModeSpec extends AstNode {
     readonly $container: GrammarSpec;
-    name: IdentifierRef
+    name: string
     rules: Array<LexerRuleSpec>
 }
 
@@ -543,7 +543,7 @@ export function isNotSet(item: unknown): item is NotSet {
 
 export interface Option extends AstNode {
     readonly $container: OptionsSpec;
-    name: IdentifierRef
+    name: string
     value: OptionValue
 }
 
@@ -567,7 +567,7 @@ export function isOptionsSpec(item: unknown): item is OptionsSpec {
 export interface OptionValue extends AstNode {
     readonly $container: Option;
     action?: ActionBlock
-    ids: Array<IdentifierRef>
+    ids: Array<string>
     number?: string
     string?: string
 }
@@ -615,7 +615,7 @@ export function isPrequelConstruct(item: unknown): item is PrequelConstruct {
 export interface RuleAction extends AstNode {
     readonly $container: Block | RulePrequel;
     action: ActionBlock
-    name: IdentifierRef
+    name: string
 }
 
 export const RuleAction = 'RuleAction';
@@ -757,7 +757,7 @@ export function isTerminal(item: unknown): item is Terminal {
 
 export interface ThrowsSpec extends AstNode {
     readonly $container: ParserRuleSpec;
-    exceptions: Array<IdentifierRef>
+    exceptions: Array<string>
 }
 
 export const ThrowsSpec = 'ThrowsSpec';
@@ -817,6 +817,9 @@ export class Antlr4AstReflection implements AstReflection {
             }
             case 'IdentifierRef:parserRuleRef': {
                 return ParserRuleSpec;
+            }
+            case 'IdList:ids': {
+                return ModeSpec;
             }
             case 'SetElement:token': {
                 return LexerRuleSpec;
