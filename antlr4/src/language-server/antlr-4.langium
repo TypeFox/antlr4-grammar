@@ -12,9 +12,9 @@ PrequelConstruct: options=OptionsSpec | grammars=DelegateGrammars | tokens=Token
 // ------------
 // Options - things that affect analysis and/or code generation
 OptionsSpec: OPTIONS (options+=Option SEMI)* RBRACE;
-Option: name=LEXER_RULE_ID ASSIGN value=OptionValue;
+Option: name=UPPER_CASE_ID ASSIGN value=OptionValue;
 OptionValue
-   : ids+=LEXER_RULE_ID (DOT ids+=LEXER_RULE_ID)*
+   : ids+=UPPER_CASE_ID (DOT ids+=UPPER_CASE_ID)*
    | string=STRING_LITERAL
    | action=ActionBlock
    | number=INT
@@ -23,19 +23,19 @@ OptionValue
 // ------------
 // Delegates
 DelegateGrammars: IMPORT grammars+=DelegateGrammar (COMMA grammars+=DelegateGrammar)* SEMI;
-DelegateGrammar: alias=LEXER_RULE_ID ASSIGN name=LEXER_RULE_ID | name=LEXER_RULE_ID;
+DelegateGrammar: alias=UPPER_CASE_ID ASSIGN name=UPPER_CASE_ID | name=UPPER_CASE_ID;
 
 // ------------
 // Tokens & Channels
 TokensSpec: TOKENS list=IdList? RBRACE;
 ChannelsSpec: CHANNELS list=IdList? RBRACE;
-IdList: ids+=[ModeSpec:LEXER_RULE_ID] (COMMA ids+=[ModeSpec:LEXER_RULE_ID])* COMMA?;
+IdList: ids+=[ModeSpec:UPPER_CASE_ID] (COMMA ids+=[ModeSpec:UPPER_CASE_ID])* COMMA?;
 
 // Match stuff like @parser::members {int i;}
-Action_: AT (scopeName=ActionScopeName COLONCOLON)? name=LEXER_RULE_ID block=ActionBlock;
+Action_: AT (scopeName=ActionScopeName COLONCOLON)? name=UPPER_CASE_ID block=ActionBlock;
 
 // Scope names could collide with keywords; allow them as ids for action scopes
-ActionScopeName: name=LEXER_RULE_ID | lexer?=LEXER | parser?=PARSER;
+ActionScopeName: name=UPPER_CASE_ID | lexer?=LEXER | parser?=PARSER;
 ActionBlock: BEGIN_ACTION contents+=ActionContent* RBRACE;
 ActionContent returns string:
    BEGIN_ACTION
@@ -54,11 +54,11 @@ ArgumentContent returns string:
     | RBRACK
     | ANY_CONTENT
     ;
-ModeSpec: MODE name=LEXER_RULE_ID SEMI rules+=LexerRuleSpec*;
+ModeSpec: MODE name=UPPER_CASE_ID SEMI rules+=LexerRuleSpec*;
 Rules: rules+=RuleSpec*;
 RuleSpec: rule=(ParserRuleSpec | LexerRuleSpec);
 
-ParserRuleSpec: modifiers=RuleModifiers? name=PARSER_RULE_ID block=ArgActionBlock? return=RuleReturns? throws=ThrowsSpec? locals=LocalsSpec? prequals+=RulePrequel* COLON ruleBlock=RuleBlock SEMI exceptionGroup=ExceptionGroup;
+ParserRuleSpec: modifiers=RuleModifiers? name=LOWER_CASE_ID block=ArgActionBlock? return=RuleReturns? throws=ThrowsSpec? locals=LocalsSpec? prequals+=RulePrequel* COLON ruleBlock=RuleBlock SEMI exceptionGroup=ExceptionGroup;
 
 ExceptionGroup: handlers+=ExceptionHandler* finally=FinallyClause?;
 ExceptionHandler: CATCH argAction=ArgActionBlock action=ActionBlock;
@@ -68,11 +68,11 @@ RuleReturns: RETURNS argAction=ArgActionBlock;
 
 // --------------
 // Exception spec
-ThrowsSpec: THROWS exceptions+=LEXER_RULE_ID (COMMA exceptions+=LEXER_RULE_ID)*;
+ThrowsSpec: THROWS exceptions+=UPPER_CASE_ID (COMMA exceptions+=UPPER_CASE_ID)*;
 LocalsSpec: LOCALS argAction=ArgActionBlock;
 
 /** Match stuff like @init {int i;} */
-RuleAction: AT name=PARSER_RULE_ID action=ActionBlock;
+RuleAction: AT name=LOWER_CASE_ID action=ActionBlock;
 RuleModifiers: modifiers+=RuleModifier+;
 
 // An individual access modifier for a rule. The 'fragment' modifier
@@ -84,11 +84,11 @@ RuleModifiers: modifiers+=RuleModifier+;
 RuleModifier: public?=PUBLIC | private?=PRIVATE | protected?=PROTECTED | fragment?=FRAGMENT;
 RuleBlock: list=RuleAltList;
 RuleAltList: alts+=LabeledAlt (OR alts+=LabeledAlt)*;
-LabeledAlt: alt=Alternative (POUND id=LEXER_RULE_ID)?;
+LabeledAlt: alt=Alternative (POUND id=UPPER_CASE_ID)?;
 
 // --------------------
 // Lexer rules
-LexerRuleSpec: fragment?=FRAGMENT? name=LEXER_RULE_ID options=OptionsSpec? COLON block=LexerRuleBlock SEMI;
+LexerRuleSpec: fragment?=FRAGMENT? name=UPPER_CASE_ID options=OptionsSpec? COLON block=LexerRuleBlock SEMI;
 LexerRuleBlock: LexerAltList;
 LexerAltList: alts+=LexerAlt (OR alts+=LexerAlt)*;
 LexerAlt: (elements=LexerElements cmds=LexerCommands?)?;
@@ -100,7 +100,7 @@ LexerElement
    | action=ActionBlock question?=QUESTION?
    ;
    // but preds can be anywhere
-LabeledLexerElement: name=PARSER_RULE_ID op=(ASSIGN | PLUS_ASSIGN) elements=(LexerAtom | LexerBlock);
+LabeledLexerElement: name=LOWER_CASE_ID op=(ASSIGN | PLUS_ASSIGN) elements=(LexerAtom | LexerBlock);
 LexerBlock: LPAREN list=LexerAltList RPAREN;
    // E.g., channel(HIDDEN), skip, more, mode(INSIDE), push(INSIDE), pop
 LexerCommands: RARROW cmds+=LexerCommand (COMMA cmds+=LexerCommand)*;
@@ -158,7 +158,7 @@ Atom
 NotSet: NOT element=SetElement | NOT set=BlockSet;
 BlockSet: LPAREN elements+=SetElement (OR elements+=SetElement)* RPAREN;
 SetElement
-   : token=[LexerRuleSpec:LEXER_RULE_ID] options=ElementOptions?
+   : token=[LexerRuleSpec:UPPER_CASE_ID] options=ElementOptions?
    | range=CharacterRange
    | STRING_LITERAL options=ElementOptions?
    ;
@@ -174,15 +174,15 @@ RuleRef: ruleRef=IdentifierRef actions=ArgActionBlock? options=ElementOptions?;
 // ---------------
 // Character Range
 CharacterRange: left=STRING_LITERAL RANGE right=STRING_LITERAL;
-Terminal: token=[LexerRuleSpec:LEXER_RULE_ID] options=ElementOptions? | string=STRING_LITERAL options=ElementOptions?;
+Terminal: token=[LexerRuleSpec:UPPER_CASE_ID] options=ElementOptions? | string=STRING_LITERAL options=ElementOptions?;
 
 // Terminals may be adorned with certain options when
 // reference in the grammar: TOK<,,,>
 ElementOptions: LT element+=ElementOption (COMMA element+=ElementOption)* GT;
 ElementOption: ref=IdentifierRef (ASSIGN value=(IdentifierRef | STRING_LITERAL))?;
 IdentifierRef
-   : parserRuleRef=[ParserRuleSpec:PARSER_RULE_ID]
-   | lexerRuleRef=[LexerRuleSpec:LEXER_RULE_ID]
+   : parserRuleRef=[ParserRuleSpec:LOWER_CASE_ID]
+   | lexerRuleRef=[LexerRuleSpec:UPPER_CASE_ID]
    ;
 
 
@@ -286,8 +286,8 @@ terminal NOT: Tilde;
 
 // -------------------------
 // Identifiers - allows unicode rule/token names
-terminal LEXER_RULE_ID: UpperCaseId;
-terminal PARSER_RULE_ID: LowerCaseId;
+terminal UPPER_CASE_ID: UpperCaseId;
+terminal LOWER_CASE_ID: LowerCaseId;
 
 // -------------------------
 // Whitespace

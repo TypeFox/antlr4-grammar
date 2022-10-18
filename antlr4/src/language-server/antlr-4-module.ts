@@ -56,7 +56,7 @@ export function createAntlr4Services(context?: DefaultSharedModuleContext): {
     Antlr4: Antlr4Services
 } {
     const shared = inject(
-        createDefaultSharedModule(context),
+        createDefaultSharedModule(context!),
         Antlr4GeneratedSharedModule
     );
     const Antlr4 = inject(

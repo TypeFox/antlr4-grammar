@@ -339,7 +339,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "LEXER_RULE_ID"
+                "$refText": "UPPER_CASE_ID"
               },
               "arguments": []
             }
@@ -388,7 +388,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$refText": "LEXER_RULE_ID"
+                    "$refText": "UPPER_CASE_ID"
                   },
                   "arguments": []
                 }
@@ -410,7 +410,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
                     "terminal": {
                       "$type": "RuleCall",
                       "rule": {
-                        "$refText": "LEXER_RULE_ID"
+                        "$refText": "UPPER_CASE_ID"
                       },
                       "arguments": []
                     }
@@ -547,7 +547,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$refText": "LEXER_RULE_ID"
+                    "$refText": "UPPER_CASE_ID"
                   },
                   "arguments": []
                 }
@@ -566,7 +566,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$refText": "LEXER_RULE_ID"
+                    "$refText": "UPPER_CASE_ID"
                   },
                   "arguments": []
                 }
@@ -580,7 +580,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "LEXER_RULE_ID"
+                "$refText": "UPPER_CASE_ID"
               },
               "arguments": []
             }
@@ -696,7 +696,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
               "terminal": {
                 "$type": "RuleCall",
                 "rule": {
-                  "$refText": "LEXER_RULE_ID"
+                  "$refText": "UPPER_CASE_ID"
                 },
                 "arguments": []
               },
@@ -725,7 +725,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
                   "terminal": {
                     "$type": "RuleCall",
                     "rule": {
-                      "$refText": "LEXER_RULE_ID"
+                      "$refText": "UPPER_CASE_ID"
                     },
                     "arguments": []
                   },
@@ -797,7 +797,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "LEXER_RULE_ID"
+                "$refText": "UPPER_CASE_ID"
               },
               "arguments": []
             }
@@ -836,7 +836,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "LEXER_RULE_ID"
+                "$refText": "UPPER_CASE_ID"
               },
               "arguments": []
             }
@@ -1094,7 +1094,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "LEXER_RULE_ID"
+                "$refText": "UPPER_CASE_ID"
               },
               "arguments": []
             }
@@ -1211,7 +1211,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "PARSER_RULE_ID"
+                "$refText": "LOWER_CASE_ID"
               },
               "arguments": []
             }
@@ -1542,7 +1542,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "LEXER_RULE_ID"
+                "$refText": "UPPER_CASE_ID"
               },
               "arguments": []
             }
@@ -1564,7 +1564,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$refText": "LEXER_RULE_ID"
+                    "$refText": "UPPER_CASE_ID"
                   },
                   "arguments": []
                 }
@@ -1635,7 +1635,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "PARSER_RULE_ID"
+                "$refText": "LOWER_CASE_ID"
               },
               "arguments": []
             }
@@ -1856,7 +1856,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$refText": "LEXER_RULE_ID"
+                    "$refText": "UPPER_CASE_ID"
                   },
                   "arguments": []
                 }
@@ -1899,7 +1899,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "LEXER_RULE_ID"
+                "$refText": "UPPER_CASE_ID"
               },
               "arguments": []
             }
@@ -2233,7 +2233,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "PARSER_RULE_ID"
+                "$refText": "LOWER_CASE_ID"
               },
               "arguments": []
             }
@@ -3261,7 +3261,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
                   "terminal": {
                     "$type": "RuleCall",
                     "rule": {
-                      "$refText": "LEXER_RULE_ID"
+                      "$refText": "UPPER_CASE_ID"
                     },
                     "arguments": []
                   },
@@ -3529,7 +3529,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
                   "terminal": {
                     "$type": "RuleCall",
                     "rule": {
-                      "$refText": "LEXER_RULE_ID"
+                      "$refText": "UPPER_CASE_ID"
                     },
                     "arguments": []
                   },
@@ -3738,7 +3738,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
               "terminal": {
                 "$type": "RuleCall",
                 "rule": {
-                  "$refText": "PARSER_RULE_ID"
+                  "$refText": "LOWER_CASE_ID"
                 },
                 "arguments": []
               },
@@ -3757,7 +3757,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
               "terminal": {
                 "$type": "RuleCall",
                 "rule": {
-                  "$refText": "LEXER_RULE_ID"
+                  "$refText": "UPPER_CASE_ID"
                 },
                 "arguments": []
               },
@@ -4483,7 +4483,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     },
     {
       "$type": "TerminalRule",
-      "name": "LEXER_RULE_ID",
+      "name": "UPPER_CASE_ID",
       "definition": {
         "$type": "TerminalRuleCall",
         "rule": {
@@ -4495,7 +4495,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     },
     {
       "$type": "TerminalRule",
-      "name": "PARSER_RULE_ID",
+      "name": "LOWER_CASE_ID",
       "definition": {
         "$type": "TerminalRuleCall",
         "rule": {

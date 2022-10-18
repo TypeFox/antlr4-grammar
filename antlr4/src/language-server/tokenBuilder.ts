@@ -1,5 +1,6 @@
 import { TokenType, TokenVocabulary } from "chevrotain";
-import { DefaultTokenBuilder, Grammar, TerminalRule } from "langium";
+import { DefaultTokenBuilder, Grammar } from "langium";
+import { TerminalRule } from "langium/lib/grammar/generated/ast";
 
 type LexerMode = 'normal'|'argument'|'targetLanguageAction';
 
