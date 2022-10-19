@@ -3,7 +3,7 @@ import {
     LangiumServices, LangiumSharedServices, Module, PartialLangiumServices
 } from 'langium';
 import { Antlr4GeneratedModule, Antlr4GeneratedSharedModule } from './generated/module';
-import { Antlr4ValidationRegistry, Antlr4Validator } from './antlr-4-validator';
+import { Antlr4ValidationRegistry, Antlr4Validator } from './validation';
 import { Antlr4TokenBuilder } from './tokenBuilder';
 import { Antlr4ScopeComputation, Antlr4ScopeProvider } from './scope';
 

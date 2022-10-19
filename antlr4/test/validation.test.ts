@@ -5,15 +5,18 @@ import { join } from 'path';
 import { EmptyFileSystem } from 'langium';
 
 const { shared, Antlr4 } = createAntlr4Services(EmptyFileSystem);
-const { parse, expectOk } = parseHelper(Antlr4);
+const { parse, expectNoLexerErrors, expectValidationErrors, expectNoParserErrors } = parseHelper(Antlr4);
 
-describe('parser', () => {
-    it('parse', async () => {
+describe('Validation', () => {
+    it('should detect duplicated rule names', async () => {
         const document = await parse(`
             grammar Hallo;
             start: Hallo;
+            start: Hallo;
             Hallo: 'Hallo!';
         `);
-        expectOk(document);
+        expectNoLexerErrors(document);
+        expectNoParserErrors(document);
+        expectValidationErrors(document, e => /duplicated/i.test(e.message), 2);
     });
 });

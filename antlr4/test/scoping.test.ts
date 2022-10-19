@@ -6,7 +6,7 @@ import { EmptyFileSystem, LangiumDocument } from 'langium';
 import { GrammarSpec, ParserRuleSpec } from '../src/language-server/generated/ast';
 
 const { shared, Antlr4 } = createAntlr4Services(EmptyFileSystem);
-const { parse, parseFile, expectOk } = parseHelper<GrammarSpec>(Antlr4);
+const { parse, expectOk } = parseHelper<GrammarSpec>(Antlr4);
 function getAstNode(document: LangiumDocument<GrammarSpec>, path: string) {
     return Antlr4.workspace.AstNodeLocator.getAstNode(document, path);
 }

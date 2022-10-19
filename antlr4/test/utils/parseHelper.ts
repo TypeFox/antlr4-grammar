@@ -21,7 +21,7 @@ export function parseHelper<T extends AstNode = AstNode>(
         uri
       );
     services.shared.workspace.LangiumDocuments.addDocument(document);
-    await documentBuilder.build([document]);
+    await documentBuilder.build([document], { validationChecks: 'all' });
     return document;
   }
   async function parseFile(fileName: string) {
@@ -32,11 +32,38 @@ export function parseHelper<T extends AstNode = AstNode>(
     parse,
     parseFile,
     expectOk: function<T extends AstNode = AstNode>(document: LangiumDocument<T>) {
-        expect(document.parseResult.lexerErrors, convertLexerErrors(document.parseResult.lexerErrors)).toHaveLength(0);
-        expect(document.parseResult.parserErrors, convertParserErrors(document.parseResult.parserErrors)).toHaveLength(0);
-        expect(document.diagnostics ?? [], convertValidationErrors(document.diagnostics ?? [])).toHaveLength(0);
-    }
+        expectNoLexerErrors<T>(document);
+        expectNoParserErrors<T>(document);
+        expectNoValidationErrors<T>(document);
+    },
+    expectNoLexerErrors,
+    expectNoParserErrors,
+    expectNoValidationErrors,
+    expectOneParserError,
+    expectValidationErrors
   };
+}
+
+function expectValidationErrors<T extends AstNode = AstNode>(document: LangiumDocument<T>, predicate: (error: Diagnostic) => boolean, count: number = 1) {
+  const errors = (document.diagnostics ?? []).filter(predicate)
+  expect(errors, convertValidationErrors(errors)).toHaveLength(count);
+}
+
+function expectOneParserError<T extends AstNode = AstNode>(document: LangiumDocument<T>, predicate: (error: IRecognitionException) => boolean) {
+  const errors = document.parseResult.parserErrors.filter(predicate)
+  expect(errors, convertParserErrors(errors)).toHaveLength(1);
+}
+
+function expectNoValidationErrors<T extends AstNode = AstNode>(document: LangiumDocument<T>) {
+  expect(document.diagnostics ?? [], convertValidationErrors(document.diagnostics ?? [])).toHaveLength(0);
+}
+
+function expectNoParserErrors<T extends AstNode = AstNode>(document: LangiumDocument<T>) {
+  expect(document.parseResult.parserErrors, convertParserErrors(document.parseResult.parserErrors)).toHaveLength(0);
+}
+
+function expectNoLexerErrors<T extends AstNode = AstNode>(document: LangiumDocument<T>) {
+  expect(document.parseResult.lexerErrors, convertLexerErrors(document.parseResult.lexerErrors)).toHaveLength(0);
 }
 
 function convertLexerErrors(lexerErrors: ILexingError[]): string | undefined {
