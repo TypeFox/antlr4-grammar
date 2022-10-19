@@ -101,7 +101,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "IdentifierRef"
+                "$refText": "UPPER_CASE_ID"
               },
               "arguments": []
             }

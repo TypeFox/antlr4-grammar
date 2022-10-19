@@ -5,6 +5,7 @@ import {
 import { Antlr4GeneratedModule, Antlr4GeneratedSharedModule } from './generated/module';
 import { Antlr4ValidationRegistry, Antlr4Validator } from './antlr-4-validator';
 import { Antlr4TokenBuilder } from './tokenBuilder';
+import { Antlr4ScopeComputation, Antlr4ScopeProvider } from './scope';
 
 /**
  * Declaration of custom services - add your own service classes here.
@@ -29,6 +30,10 @@ export type Antlr4Services = LangiumServices & Antlr4AddedServices
 export const Antlr4Module: Module<Antlr4Services, PartialLangiumServices & Antlr4AddedServices> = {
     parser: {
         TokenBuilder: () => new Antlr4TokenBuilder()
+    },
+    references: {
+        ScopeComputation: (svc) => new Antlr4ScopeComputation(svc),
+        ScopeProvider: (svc) => new Antlr4ScopeProvider(svc)
     },
     validation: {
         ValidationRegistry: (services) => new Antlr4ValidationRegistry(services),

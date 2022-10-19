@@ -297,7 +297,7 @@ export function isFinallyClause(item: unknown): item is FinallyClause {
 
 export interface GrammarDecl extends AstNode {
     readonly $container: GrammarSpec;
-    name: IdentifierRef
+    name: string
     type: GrammarType
 }
 
@@ -334,7 +334,7 @@ export function isGrammarType(item: unknown): item is GrammarType {
 }
 
 export interface IdentifierRef extends AstNode {
-    readonly $container: ElementOption | GrammarDecl | LabeledElement | LexerCommand | RuleRef;
+    readonly $container: ElementOption | LabeledElement | LexerCommand | RuleRef;
     lexerRuleRef?: Reference<LexerRuleSpec>
     parserRuleRef?: Reference<ParserRuleSpec>
 }

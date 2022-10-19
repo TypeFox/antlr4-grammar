@@ -8,10 +8,12 @@ const { shared, Antlr4 } = createAntlr4Services(EmptyFileSystem);
 const { parse, parseFile, expectOk } = parseHelper(Antlr4);
 
 describe('parser', () => {
-    describe('Hallo', () => {
-        it('parse', async () => {
-            const document = await parseFile(join(__dirname, 'Hallo.g4'));
-            expectOk(document);
-        });
+    it('parse', async () => {
+        const document = await parse(`
+            grammar Hallo;
+            start: Hallo;
+            Hallo: 'Hallo!';
+        `);
+        expectOk(document);
     });
 });

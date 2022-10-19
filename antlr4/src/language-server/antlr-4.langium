@@ -1,7 +1,7 @@
 grammar Antlr4
 
 entry GrammarSpec: grammarDecl=GrammarDecl prequels+=PrequelConstruct* rules=Rules specs+=ModeSpec*;
-GrammarDecl: type=GrammarType name=IdentifierRef SEMI;
+GrammarDecl: type=GrammarType name=UPPER_CASE_ID SEMI;
 GrammarType: (lexer?=LEXER GRAMMAR | parser?=PARSER GRAMMAR | mixed?=GRAMMAR);
 
 // This is the list of all constructs that can be declared before
