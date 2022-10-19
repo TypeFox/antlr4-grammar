@@ -1,22 +1,41 @@
-import {createAntlr4Services} from '../src/language-server/antlr-4-module';
-import {describe, it, expect} from 'vitest';
-import { parseHelper } from './utils/parseHelper';
-import { join } from 'path';
-import { EmptyFileSystem } from 'langium';
+import { describe, it, afterEach } from "vitest";
+import { parseHelper } from "./utils/parseHelper";
 
-const { shared, Antlr4 } = createAntlr4Services(EmptyFileSystem);
-const { parse, expectNoLexerErrors, expectValidationErrors, expectNoParserErrors } = parseHelper(Antlr4);
+describe("Validation", () => {
+  const {
+    clear,
+    parse,
+    expectNoLexerErrors,
+    expectValidationErrors,
+    expectNoParserErrors,
+  } = parseHelper();
 
-describe('Validation', () => {
-    it('should detect duplicated rule names', async () => {
-        const document = await parse(`
+  afterEach(() => clear());
+
+  it("should detect duplicated rule names", async () => {
+    const { Hallo: document } = await parse({
+      Hallo: `
             grammar Hallo;
             start: Hallo;
             start: Hallo;
             Hallo: 'Hallo!';
-        `);
-        expectNoLexerErrors(document);
-        expectNoParserErrors(document);
-        expectValidationErrors(document, e => /duplicated/i.test(e.message), 2);
+        `,
     });
+    expectNoLexerErrors(document);
+    expectNoParserErrors(document);
+    expectValidationErrors(document, (e) => /duplicated/i.test(e.message), 2);
+  });
+
+  it("should detect reserved rule names", async () => {
+    const { Hallo: document } = await parse({
+      Hallo: `
+            grammar Hallo;
+            start: Error; //Error is reserved word
+            Error: 'Hallo!';
+        `,
+    });
+    expectNoLexerErrors(document);
+    expectNoParserErrors(document);
+    expectValidationErrors(document, (e) => /reserved/i.test(e.message));
+  });
 });

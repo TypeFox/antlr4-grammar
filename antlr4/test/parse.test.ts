@@ -1,19 +1,18 @@
-import {createAntlr4Services} from '../src/language-server/antlr-4-module';
-import {describe, it, expect} from 'vitest';
-import { parseHelper } from './utils/parseHelper';
-import { join } from 'path';
-import { EmptyFileSystem } from 'langium';
+import { describe, it, afterEach } from "vitest";
+import { parseHelper } from "./utils/parseHelper";
 
-const { shared, Antlr4 } = createAntlr4Services(EmptyFileSystem);
-const { parse, expectOk } = parseHelper(Antlr4);
+describe("parser", () => {
+  const { parse, expectOk, clear } = parseHelper();
 
-describe('parser', () => {
-    it('parse', async () => {
-        const document = await parse(`
+  afterEach(() => clear());
+  it("parse", async () => {
+    const { Hallo: document } = await parse({
+      Hallo: `
             grammar Hallo;
             start: Hallo;
             Hallo: 'Hallo!';
-        `);
-        expectOk(document);
+        `,
     });
+    expectOk(document);
+  });
 });

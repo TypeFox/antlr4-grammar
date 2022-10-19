@@ -9,7 +9,8 @@ export class Antlr4ValidationRegistry extends ValidationRegistry {
         super(services);
         const validator = services.validation.Antlr4Validator;
         const checks: ValidationChecks<Antlr4AstType> = {
-            GrammarSpec: validator.duplicatedRules
+            GrammarSpec: [validator.checkDuplicatedRules],
+            RuleSpec: [validator.checkRuleNameReserved]
         };
         this.register(checks, validator);
     }
@@ -20,7 +21,7 @@ export class Antlr4ValidationRegistry extends ValidationRegistry {
  */
 export class Antlr4Validator {
 
-    duplicatedRules(grammar: GrammarSpec, accept: ValidationAcceptor): void {
+    checkDuplicatedRules(grammar: GrammarSpec, accept: ValidationAcceptor): void {
         const groups: Record<string, RuleSpec[]> = {};
         grammar.rules.rules.forEach(r => {
             groups[r.rule.name] ??= [];
@@ -30,9 +31,15 @@ export class Antlr4Validator {
             if (Object.prototype.hasOwnProperty.call(groups, name)) {
                 const rules = groups[name];
                 if(rules.length > 1) {
-                    rules.forEach(r => accept('error', 'Duplicated rule name', {node: r }));                    
+                    rules.forEach(r => accept('error', 'Duplicated rule name', {node: r.rule, property: 'name' }));                    
                 }
             }
+        }
+    }
+    private reservedNames: string[] = ['Error'];
+    checkRuleNameReserved(rule: RuleSpec, accept: ValidationAcceptor): void {
+        if(this.reservedNames.includes(rule.rule.name)) {
+            accept('error', 'Rule name is reserved', {node: rule.rule, property: 'name'});
         }
     }
 

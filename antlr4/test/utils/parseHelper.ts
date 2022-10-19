@@ -1,36 +1,50 @@
 import { ILexingError, IRecognitionException } from "chevrotain";
 import { readFile } from "fs/promises";
-import { AstNode, LangiumDocument, LangiumServices } from "langium";
+import { AstNode, EmptyFileSystem, LangiumDocument, LangiumServices } from "langium";
 import { expect } from "vitest";
 import { URI } from "vscode-uri";
 import { Diagnostic } from "vscode-languageserver";
+import { createAntlr4Services } from "../../src/language-server/antlr-4-module";
+import { GrammarSpec } from "../../src/language-server/generated/ast";
 
-export function parseHelper<T extends AstNode = AstNode>(
-  services: LangiumServices
-) {
+export type InputFiles<K extends string> = Record<K, string>; //Filename without Extension -> content of that file
+export type OutputFiles<T extends AstNode, K extends string> = Record<K, LangiumDocument<T>>; //Filename without Extension -> content of that file
+
+export function parseHelper<T extends AstNode = AstNode>() {
+  const { Antlr4: services } = createAntlr4Services(EmptyFileSystem);
+  let activeUris: URI[] = [];
   const metaData = services.LanguageMetaData;
   const documentBuilder = services.shared.workspace.DocumentBuilder;
-  async function parse(input: string) {
-    const randomNumber = Math.floor(Math.random() * 10000000) + 1000000;
-    const uri = URI.parse(
-      `file:///${randomNumber}${metaData.fileExtensions[0]}`
-    );
-    const document =
-      services.shared.workspace.LangiumDocumentFactory.fromString<T>(
-        input,
-        uri
-      );
-    services.shared.workspace.LangiumDocuments.addDocument(document);
-    await documentBuilder.build([document], { validationChecks: 'all' });
-    return document;
+  async function parse<K extends string>(inputs: InputFiles<K>): Promise<OutputFiles<T, K>> {
+    const documents: LangiumDocument<T>[] = [];
+    const hash: any = {};
+    for (const fileName in inputs) {
+      if (Object.prototype.hasOwnProperty.call(inputs, fileName)) {
+        const uri = URI.parse(
+          `file:///${fileName}${metaData.fileExtensions[0]}`
+        );
+        activeUris.push(uri);
+        const content = inputs[fileName];
+        const document = services.shared.workspace.LangiumDocumentFactory.fromString<T>(content, uri);
+        services.shared.workspace.LangiumDocuments.addDocument(document);
+        documents.push(document);
+        hash[fileName] = document;
+      }
+    }
+    await documentBuilder.build(documents, { validationChecks: 'all' });
+    return hash as OutputFiles<T, K>;
   }
-  async function parseFile(fileName: string) {
-    const input = await readFile(fileName, 'utf-8');
-    return parse(input);
+  async function clear() {
+    await documentBuilder.update([], activeUris);
+    activeUris = [];
+  }
+  function getAstNode(document: LangiumDocument<GrammarSpec>, path: string) {
+    return services.workspace.AstNodeLocator.getAstNode(document, path);
   }
   return {
+    clear,
+    getAstNode,
     parse,
-    parseFile,
     expectOk: function<T extends AstNode = AstNode>(document: LangiumDocument<T>) {
         expectNoLexerErrors<T>(document);
         expectNoParserErrors<T>(document);
