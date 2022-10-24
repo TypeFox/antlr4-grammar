@@ -11,11 +11,11 @@ PrequelConstruct: options=OptionsSpec | grammars=DelegateGrammars | tokens=Token
 
 // ------------
 // Options - things that affect analysis and/or code generation
-OptionsSpec: OPTIONS (options+=Option SEMI)* RBRACE;
+OptionsSpec: OPTIONS (options+=Option SEMI)* COMMON__END_ACTION;
 Option: name=UPPER_CASE_ID ASSIGN value=OptionValue;
 OptionValue
    : ids+=UPPER_CASE_ID (DOT ids+=UPPER_CASE_ID)*
-   | string=STRING_LITERAL
+   | string=COMMON__STRING_LITERAL
    | action=ActionBlock
    | number=INT
    ;
@@ -27,8 +27,8 @@ DelegateGrammar: alias=UPPER_CASE_ID ASSIGN name=UPPER_CASE_ID | name=UPPER_CASE
 
 // ------------
 // Tokens & Channels
-TokensSpec: TOKENS list=IdList? RBRACE;
-ChannelsSpec: CHANNELS list=IdList? RBRACE;
+TokensSpec: TOKENS list=IdList? COMMON__END_ACTION;
+ChannelsSpec: CHANNELS list=IdList? COMMON__END_ACTION;
 IdList: ids+=[ModeSpec:UPPER_CASE_ID] (COMMA ids+=[ModeSpec:UPPER_CASE_ID])* COMMA?;
 
 // Match stuff like @parser::members {int i;}
@@ -36,23 +36,24 @@ Action_: AT (scopeName=ActionScopeName COLONCOLON)? name=UPPER_CASE_ID block=Act
 
 // Scope names could collide with keywords; allow them as ids for action scopes
 ActionScopeName: name=UPPER_CASE_ID | lexer?=LEXER | parser?=PARSER;
-ActionBlock: BEGIN_ACTION contents+=ActionContent* RBRACE;
+ActionBlock: COMMON__BEGIN_ACTION contents+=ActionContent* COMMON__END_ACTION;
 ActionContent returns string:
-   BEGIN_ACTION
-   | ESCAPE
-   | DQUOTE_STRING_LITERAL
-   | STRING_LITERAL
-   | RBRACE
-   | ANY_CONTENT
+   COMMON__BEGIN_ACTION
+   | COMMON__ESCAPE
+   | COMMON__DSTRING_LITERAL
+   | COMMON__STRING_LITERAL
+   | COMMON__ANY
+   | COMMON__END_ACTION
    ;
-ArgActionBlock: BEGIN_ARGUMENT contents+=ArgumentContent* RBRACK;
+
+ArgActionBlock: COMMON__BEGIN_ARGUMENT contents+=ArgumentContent* COMMON__END_ARGUMENT;
 ArgumentContent returns string:
-    BEGIN_ARGUMENT
-    | ESCAPE
-    | DQUOTE_STRING_LITERAL
-    | STRING_LITERAL
-    | RBRACK
-    | ANY_CONTENT
+    COMMON__ESCAPE
+    | COMMON__DSTRING_LITERAL
+    | COMMON__STRING_LITERAL
+    | COMMON__ANY
+    | COMMON__BEGIN_ARGUMENT
+    | COMMON__END_ARGUMENT
     ;
 ModeSpec: MODE name=UPPER_CASE_ID SEMI rules+=LexerRuleSpec*;
 Rules: rules+=RuleSpec*;
@@ -160,7 +161,7 @@ BlockSet: LPAREN elements+=SetElement (OR elements+=SetElement)* RPAREN;
 SetElement
    : token=[LexerRuleSpec:UPPER_CASE_ID] options=ElementOptions?
    | range=CharacterRange
-   | STRING_LITERAL options=ElementOptions?
+   | COMMON__STRING_LITERAL options=ElementOptions?
    ;
 
 // -------------
@@ -173,13 +174,13 @@ RuleRef: ruleRef=IdentifierRef actions=ArgActionBlock? options=ElementOptions?;
 
 // ---------------
 // Character Range
-CharacterRange: left=STRING_LITERAL RANGE right=STRING_LITERAL;
-Terminal: token=[LexerRuleSpec:UPPER_CASE_ID] options=ElementOptions? | string=STRING_LITERAL options=ElementOptions?;
+CharacterRange: left=COMMON__STRING_LITERAL RANGE right=COMMON__STRING_LITERAL;
+Terminal: token=[LexerRuleSpec:UPPER_CASE_ID] options=ElementOptions? | string=COMMON__STRING_LITERAL options=ElementOptions?;
 
 // Terminals may be adorned with certain options when
 // reference in the grammar: TOK<,,,>
 ElementOptions: LT element+=ElementOption (COMMA element+=ElementOption)* GT;
-ElementOption: ref=IdentifierRef (ASSIGN value=(IdentifierRef | STRING_LITERAL))?;
+ElementOption: ref=IdentifierRef (ASSIGN value=(IdentifierRef | COMMON__STRING_LITERAL))?;
 IdentifierRef
    : parserRuleRef=[ParserRuleSpec:LOWER_CASE_ID]
    | lexerRuleRef=[LexerRuleSpec:UPPER_CASE_ID]
@@ -201,9 +202,9 @@ IdentifierRef
 
 // -------------------------
 // Comments
-hidden terminal DOC_COMMENT: DocComment;
-hidden terminal BLOCK_COMMENT: BlockComment;
-hidden terminal LINE_COMMENT: LineComment;
+hidden terminal COMMON__DOC_COMMENT: DocComment;
+hidden terminal COMMON__BLOCK_COMMENT: BlockComment;
+hidden terminal COMMON__LINE_COMMENT: LineComment;
 
 // -------------------------
 // Integer
@@ -217,7 +218,7 @@ terminal INT: DecimalNumeral;
 // multi-character string. All literals are single quote delimited and
 // may contain unicode escape sequences of the form \uxxxx, where x
 // is a valid hexadecimal number (per Unicode standard).
-terminal STRING_LITERAL: SQuoteLiteral;
+terminal COMMON__STRING_LITERAL: SQuoteLiteral;
 terminal UNTERMINATED_STRING_LITERAL: USQuoteLiteral;
 
 // -------------------------
@@ -226,11 +227,11 @@ terminal UNTERMINATED_STRING_LITERAL: USQuoteLiteral;
 // Certain argument lists, such as those specifying call parameters
 // to a rule invocation, or input parameters to a rule specification
 // are contained within square brackets.
-terminal BEGIN_ARGUMENT: LBrack;  // -> pushMode (TargetLanguageAction)
+terminal COMMON__BEGIN_ARGUMENT: LBrack;  // -> pushMode (ARGUMENT)
 
 // -------------------------
 // Target Language Actions
-terminal BEGIN_ACTION: LBrace; // -> pushMode (TargetLanguageAction);
+terminal COMMON__BEGIN_ACTION: LBrace; // -> pushMode (TargetLanguageAction);
 
 // -------------------------
 // Keywords
@@ -266,8 +267,8 @@ terminal COMMA: Comma;
 terminal SEMI: Semi;
 terminal LPAREN: LParen;
 terminal RPAREN: RParen;
-terminal RBRACE: RBrace;
-terminal RBRACK: RBrack;
+terminal COMMON__END_ACTION: RBrace;
+terminal COMMON__END_ARGUMENT: RBrack;
 terminal RARROW: RArrow;
 terminal LT: Lt;
 terminal GT: Gt;
@@ -310,21 +311,46 @@ hidden terminal WS: Ws+;
 // Arguments
 //mode Argument;
 // E.g., [int x, List<String> a[]]
-terminal ESCAPE: EscAny;
 
-// -------------------------
-// Target Language Actions
-//
-// Many language targets use {} as block delimiters and so we
-// must recursively match {} delimited blocks to balance the
-// braces. Additionally, we must make some assumptions about
-// literal string representation in the target language. We assume
-// that they are delimited by ' or " and so consume these
-// in their own alts so as not to inadvertantly match {}.
+//BEGIN ARGUMENT__*
 
-// mode TargetLanguageAction;
-terminal DQUOTE_STRING_LITERAL: DQuoteLiteral;
-terminal ANY_CONTENT: /[^ ]/;
+//END ARGUMENT__*
+
+//BEGIN ACTION__*
+terminal COMMON__ESCAPE
+   : EscAny
+   ;
+
+terminal ACTION__ACTION_BLOCK_COMMENT
+   : BlockComment
+   ;
+
+terminal ACTION__ACTION_LINE_COMMENT
+   : LineComment
+   ;
+//END ACTION__*
+
+terminal COMMON__DSTRING_LITERAL
+   : DQuoteLiteral
+   ;
+
+terminal COMMON__ANY
+   : /\S\s/
+   ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // ------------------------------------------------------------------------------
 // Grammar specific Keywords, Punctuation, etc.

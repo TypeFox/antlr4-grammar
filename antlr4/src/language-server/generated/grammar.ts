@@ -313,7 +313,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "RBRACE"
+              "$refText": "COMMON__END_ACTION"
             },
             "arguments": []
           }
@@ -427,7 +427,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "STRING_LITERAL"
+                "$refText": "COMMON__STRING_LITERAL"
               },
               "arguments": []
             }
@@ -623,7 +623,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "RBRACE"
+              "$refText": "COMMON__END_ACTION"
             },
             "arguments": []
           }
@@ -665,7 +665,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "RBRACE"
+              "$refText": "COMMON__END_ACTION"
             },
             "arguments": []
           }
@@ -883,7 +883,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "BEGIN_ACTION"
+              "$refText": "COMMON__BEGIN_ACTION"
             },
             "arguments": []
           },
@@ -903,7 +903,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "RBRACE"
+              "$refText": "COMMON__END_ACTION"
             },
             "arguments": []
           }
@@ -926,42 +926,42 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "BEGIN_ACTION"
+              "$refText": "COMMON__BEGIN_ACTION"
             },
             "arguments": []
           },
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "ESCAPE"
+              "$refText": "COMMON__ESCAPE"
             },
             "arguments": []
           },
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "DQUOTE_STRING_LITERAL"
+              "$refText": "COMMON__DSTRING_LITERAL"
             },
             "arguments": []
           },
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "STRING_LITERAL"
+              "$refText": "COMMON__STRING_LITERAL"
             },
             "arguments": []
           },
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "RBRACE"
+              "$refText": "COMMON__ANY"
             },
             "arguments": []
           },
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "ANY_CONTENT"
+              "$refText": "COMMON__END_ACTION"
             },
             "arguments": []
           }
@@ -983,7 +983,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "BEGIN_ARGUMENT"
+              "$refText": "COMMON__BEGIN_ARGUMENT"
             },
             "arguments": []
           },
@@ -1003,7 +1003,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "RBRACK"
+              "$refText": "COMMON__END_ARGUMENT"
             },
             "arguments": []
           }
@@ -1026,42 +1026,42 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "BEGIN_ARGUMENT"
+              "$refText": "COMMON__ESCAPE"
             },
             "arguments": []
           },
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "ESCAPE"
+              "$refText": "COMMON__DSTRING_LITERAL"
             },
             "arguments": []
           },
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "DQUOTE_STRING_LITERAL"
+              "$refText": "COMMON__STRING_LITERAL"
             },
             "arguments": []
           },
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "STRING_LITERAL"
+              "$refText": "COMMON__ANY"
             },
             "arguments": []
           },
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "RBRACK"
+              "$refText": "COMMON__BEGIN_ARGUMENT"
             },
             "arguments": []
           },
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "ANY_CONTENT"
+              "$refText": "COMMON__END_ARGUMENT"
             },
             "arguments": []
           }
@@ -3301,7 +3301,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
               {
                 "$type": "RuleCall",
                 "rule": {
-                  "$refText": "STRING_LITERAL"
+                  "$refText": "COMMON__STRING_LITERAL"
                 },
                 "arguments": []
               },
@@ -3475,7 +3475,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "STRING_LITERAL"
+                "$refText": "COMMON__STRING_LITERAL"
               },
               "arguments": []
             }
@@ -3494,7 +3494,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "STRING_LITERAL"
+                "$refText": "COMMON__STRING_LITERAL"
               },
               "arguments": []
             }
@@ -3561,7 +3561,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$refText": "STRING_LITERAL"
+                    "$refText": "COMMON__STRING_LITERAL"
                   },
                   "arguments": []
                 }
@@ -3701,7 +3701,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
                     {
                       "$type": "RuleCall",
                       "rule": {
-                        "$refText": "STRING_LITERAL"
+                        "$refText": "COMMON__STRING_LITERAL"
                       },
                       "arguments": []
                     }
@@ -3776,7 +3776,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     {
       "$type": "TerminalRule",
       "hidden": true,
-      "name": "DOC_COMMENT",
+      "name": "COMMON__DOC_COMMENT",
       "definition": {
         "$type": "TerminalRuleCall",
         "rule": {
@@ -3788,7 +3788,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     {
       "$type": "TerminalRule",
       "hidden": true,
-      "name": "BLOCK_COMMENT",
+      "name": "COMMON__BLOCK_COMMENT",
       "definition": {
         "$type": "TerminalRuleCall",
         "rule": {
@@ -3800,7 +3800,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     {
       "$type": "TerminalRule",
       "hidden": true,
-      "name": "LINE_COMMENT",
+      "name": "COMMON__LINE_COMMENT",
       "definition": {
         "$type": "TerminalRuleCall",
         "rule": {
@@ -3823,7 +3823,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     },
     {
       "$type": "TerminalRule",
-      "name": "STRING_LITERAL",
+      "name": "COMMON__STRING_LITERAL",
       "definition": {
         "$type": "TerminalRuleCall",
         "rule": {
@@ -3847,7 +3847,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     },
     {
       "$type": "TerminalRule",
-      "name": "BEGIN_ARGUMENT",
+      "name": "COMMON__BEGIN_ARGUMENT",
       "definition": {
         "$type": "TerminalRuleCall",
         "rule": {
@@ -3859,7 +3859,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     },
     {
       "$type": "TerminalRule",
-      "name": "BEGIN_ACTION",
+      "name": "COMMON__BEGIN_ACTION",
       "definition": {
         "$type": "TerminalRuleCall",
         "rule": {
@@ -4279,7 +4279,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     },
     {
       "$type": "TerminalRule",
-      "name": "RBRACE",
+      "name": "COMMON__END_ACTION",
       "definition": {
         "$type": "TerminalRuleCall",
         "rule": {
@@ -4291,7 +4291,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     },
     {
       "$type": "TerminalRule",
-      "name": "RBRACK",
+      "name": "COMMON__END_ARGUMENT",
       "definition": {
         "$type": "TerminalRuleCall",
         "rule": {
@@ -4520,7 +4520,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     },
     {
       "$type": "TerminalRule",
-      "name": "ESCAPE",
+      "name": "COMMON__ESCAPE",
       "definition": {
         "$type": "TerminalRuleCall",
         "rule": {
@@ -4532,7 +4532,31 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     },
     {
       "$type": "TerminalRule",
-      "name": "DQUOTE_STRING_LITERAL",
+      "name": "ACTION__ACTION_BLOCK_COMMENT",
+      "definition": {
+        "$type": "TerminalRuleCall",
+        "rule": {
+          "$refText": "BlockComment"
+        }
+      },
+      "fragment": false,
+      "hidden": false
+    },
+    {
+      "$type": "TerminalRule",
+      "name": "ACTION__ACTION_LINE_COMMENT",
+      "definition": {
+        "$type": "TerminalRuleCall",
+        "rule": {
+          "$refText": "LineComment"
+        }
+      },
+      "fragment": false,
+      "hidden": false
+    },
+    {
+      "$type": "TerminalRule",
+      "name": "COMMON__DSTRING_LITERAL",
       "definition": {
         "$type": "TerminalRuleCall",
         "rule": {
@@ -4544,10 +4568,10 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     },
     {
       "$type": "TerminalRule",
-      "name": "ANY_CONTENT",
+      "name": "COMMON__ANY",
       "definition": {
         "$type": "RegexToken",
-        "regex": "[^ ]"
+        "regex": "\\\\S\\\\s"
       },
       "fragment": false,
       "hidden": false
