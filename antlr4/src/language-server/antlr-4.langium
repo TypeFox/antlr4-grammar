@@ -37,23 +37,21 @@ Action_: AT (scopeName=ActionScopeName COLONCOLON)? name=UPPER_CASE_ID block=Act
 // Scope names could collide with keywords; allow them as ids for action scopes
 ActionScopeName: name=UPPER_CASE_ID | lexer?=LEXER | parser?=PARSER;
 ActionBlock: COMMON__BEGIN_ACTION contents+=ActionContent* COMMON__END_ACTION;
-ActionContent returns string:
-   COMMON__BEGIN_ACTION
-   | COMMON__ESCAPE
+ActionContent:
+   COMMON__ESCAPE
    | COMMON__DSTRING_LITERAL
    | COMMON__STRING_LITERAL
    | COMMON__ANY
-   | COMMON__END_ACTION
+   | ActionBlock
    ;
 
 ArgActionBlock: COMMON__BEGIN_ARGUMENT contents+=ArgumentContent* COMMON__END_ARGUMENT;
-ArgumentContent returns string:
+ArgumentContent:
     COMMON__ESCAPE
     | COMMON__DSTRING_LITERAL
     | COMMON__STRING_LITERAL
     | COMMON__ANY
-    | COMMON__BEGIN_ARGUMENT
-    | COMMON__END_ARGUMENT
+    | ArgActionBlock
     ;
 ModeSpec: MODE name=UPPER_CASE_ID SEMI rules+=LexerRuleSpec*;
 Rules: rules+=RuleSpec*;
@@ -292,7 +290,7 @@ terminal LOWER_CASE_ID: LowerCaseId;
 
 // -------------------------
 // Whitespace
-hidden terminal WS: Ws+;
+hidden terminal COMMON__WS: Ws+;
 
 // -------------------------
 // Illegal Characters
@@ -312,30 +310,16 @@ hidden terminal WS: Ws+;
 //mode Argument;
 // E.g., [int x, List<String> a[]]
 
-//BEGIN ARGUMENT__*
-
-//END ARGUMENT__*
-
-//BEGIN ACTION__*
 terminal COMMON__ESCAPE
    : EscAny
    ;
-
-terminal ACTION__ACTION_BLOCK_COMMENT
-   : BlockComment
-   ;
-
-terminal ACTION__ACTION_LINE_COMMENT
-   : LineComment
-   ;
-//END ACTION__*
 
 terminal COMMON__DSTRING_LITERAL
    : DQuoteLiteral
    ;
 
 terminal COMMON__ANY
-   : /\S\s/
+   : /[^ ]/ 
    ;
 
 

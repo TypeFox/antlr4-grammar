@@ -5,11 +5,22 @@ describe("tokenize", () => {
   const { parse, expectOk, clear } = parseHelper();
 
   afterEach(() => clear());
-  it("Argument", async () => {
-    const { Hallo: document } = await parse({
-      Hallo: `
+  it("Nested argument", async () => {
+    const { document } = await parse({
+      document: `
             grammar Hallo;
-            start: Hallo { return $1; };
+            start returns [String start]: Hallo;
+            Hallo: 'Hallo!';
+        `,
+    });
+    expectOk(document);
+  });
+
+  it("Nested action", async () => {
+    const { document } = await parse({
+      document: `
+            grammar Hallo;
+            start: Hallo { return $1; if(true) { deep: {}} };
             Hallo: 'Hallo!';
         `,
     });
