@@ -1,6 +1,7 @@
-import { ScopeProvider, AstReflection, NameProvider, AstNodeDescriptionProvider, IndexManager, LangiumServices, ReferenceInfo, Scope, Stream, AstNodeDescription, getDocument, AstNode, stream, ScopeOptions, StreamScope, interruptAndCheck, LangiumDocument, MultiMap, PrecomputedScopes, ScopeComputation, streamAllContents, streamAst, getContainerOfType } from "langium";
+import { ScopeProvider, AstReflection, NameProvider, AstNodeDescriptionProvider, IndexManager, LangiumServices, ReferenceInfo, Scope, Stream, AstNodeDescription, getDocument, AstNode, stream, ScopeOptions, StreamScope, interruptAndCheck, LangiumDocument, MultiMap, PrecomputedScopes, ScopeComputation, streamAst, getContainerOfType } from "langium";
+import { GrammarImport } from "langium/lib/grammar/generated/ast";
 import { CancellationToken } from "vscode-languageserver";
-import { isLexerRuleSpec, isParserRuleSpec, isRules, isRuleSpec } from "./generated/ast";
+import { GrammarSpec, isGrammarSpec, isLexerRuleSpec, isParserRuleSpec } from "./generated/ast";
 
 export class Antlr4ScopeProvider implements ScopeProvider {
     protected readonly reflection: AstReflection;
@@ -18,11 +19,15 @@ export class Antlr4ScopeProvider implements ScopeProvider {
     getScope(context: ReferenceInfo): Scope {
         const scopes: Array<Stream<AstNodeDescription>> = [];
         const referenceType = this.reflection.getReferenceType(context);
+        const thisDocument = getDocument<GrammarSpec>(context.container);
 
-        const precomputed = getDocument(context.container).precomputedScopes;
+        //streamAllContents(thisDocument.parseResult.value).filter(isGrammarImport).map(this.importGrammar)
+        const xxx = [...this.indexManager.allElements(GrammarSpec)];
+
+        const precomputed = thisDocument.precomputedScopes;
         if (precomputed) {
-            const rules = getContainerOfType(context.container, isRules)!;
-            let currentNode: AstNode | undefined = rules;
+            const spec = getContainerOfType(context.container, isGrammarSpec)!;
+            let currentNode: AstNode | undefined = spec.rules;
             do {
                 const allDescriptions = precomputed.get(currentNode);
                 if (allDescriptions.length > 0) {
@@ -37,6 +42,10 @@ export class Antlr4ScopeProvider implements ScopeProvider {
             result = this.createScope(scopes[i], result);
         }
         return result;
+    }
+
+    private importGrammar(grammarImport: GrammarImport) {
+
     }
 
     /**
@@ -82,7 +91,7 @@ export class Antlr4ScopeComputation implements ScopeComputation {
 
     async computeExports(document: LangiumDocument, cancelToken = CancellationToken.None): Promise<AstNodeDescription[]> {
         const exports: AstNodeDescription[] = [];
-        streamAst(document.parseResult.value).filter(isRuleSpec).map(rs => this.exportNode(rs, exports, document))
+        streamAst(document.parseResult.value).filter(isGrammarSpec).forEach(rs => this.exportNode(rs, exports, document))
         return exports;
     }
     protected exportNode(node: AstNode, exports: AstNodeDescription[], document: LangiumDocument): void {
@@ -97,10 +106,10 @@ export class Antlr4ScopeComputation implements ScopeComputation {
         const scopes = new MultiMap<AstNode, AstNodeDescription>();
 
         // Here we navigate the full AST - local scopes shall be available in the whole document
-        for (const node of streamAllContents(rootNode)) {
+        for (const node of streamAst(rootNode)) {
             await interruptAndCheck(cancelToken);
-            if(isRules(node)) {
-                for (const rule of node.rules) {
+            if(isGrammarSpec(node)) {
+                for (const rule of node.rules.rules) {
                     let description: AstNodeDescription|null = null;
                     if(isLexerRuleSpec(rule.rule)) {
                         description = this.descriptions.createDescription(rule, rule.rule.name, document)
