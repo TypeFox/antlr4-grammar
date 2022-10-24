@@ -24,14 +24,14 @@ describe("Imports", () => {
             grammar MyELang;
             import ELang;
             expr: INT|ID;
-            INT: [0-9]+;
+            ID: [a-z]+;
       `,
       ELang: `
             grammar ELang;
             stat: (expr ';')+;
             expr: INT;
             WS: [\r\n\t ]+ -> skip;
-            ID: [a-z]+;
+            INT: [0-9]+;
       `
     });
     expectOk(MyELang);

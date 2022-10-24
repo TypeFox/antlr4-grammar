@@ -1,5 +1,5 @@
 import { readdir, stat, readFile } from "fs/promises";
-import { join } from "path";
+import { join, basename } from "path";
 
 export async function getAntlr4Grammars() {
     //name -> fileName -> fileContent
@@ -25,7 +25,7 @@ export async function getAntlr4Grammars() {
         if(files.length) {
             const grammar = grammars[subFolderName] = {};
             for (const file of files) {
-                grammar[file] = await readFile(file, 'utf-8');
+                grammar[basename(file, '.g4')] = await readFile(file, 'utf-8');
             }
         }
     }
