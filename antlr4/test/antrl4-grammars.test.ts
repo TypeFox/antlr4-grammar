@@ -4,6 +4,7 @@ import {
   GrammarSpec,
 } from "../src/language-server/generated/ast";
 import { getAntlr4Grammars } from "./utils/antlr4-grammars";
+import { isLeafCstNode, streamCst } from "langium";
 
 const { clear, parse, expectOk, getAstNode } = parseHelper<GrammarSpec>();
 
@@ -16,6 +17,7 @@ describe("Antlr4 grammars", async () => {
       const documents = await parse(grammars[name]);
       for (const documentFilename of Object.keys(documents)) {
         const document = documents[documentFilename];
+        streamCst(document.parseResult.value.$cstNode!).forEach(cstNode => 'tokenType' in cstNode && console.log(`${cstNode.offset},${cstNode.text}`));
         expectOk(document);
       }
     });

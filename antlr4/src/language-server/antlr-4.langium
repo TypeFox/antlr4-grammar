@@ -45,6 +45,11 @@ ActionContent:
    | ActionBlock
    ;
 
+CharSet: COMMON__BEGIN_ARGUMENT content=CharSetContent* COMMON__END_ARGUMENT;
+CharSetContent returns string
+   : COMMON__LEXER_CHAR_SET_BODY
+   | COMMON__ESCAPE
+   ;
 ArgActionBlock: COMMON__BEGIN_ARGUMENT contents+=ArgumentContent* COMMON__END_ARGUMENT;
 ArgumentContent:
     COMMON__ESCAPE
@@ -90,8 +95,7 @@ LabeledAlt: alt=Alternative (POUND id=UPPER_CASE_ID)?;
 LexerRuleSpec: fragment?=FRAGMENT? name=UPPER_CASE_ID options=OptionsSpec? COLON block=LexerRuleBlock SEMI;
 LexerRuleBlock: LexerAltList;
 LexerAltList: alts+=LexerAlt (OR alts+=LexerAlt)*;
-LexerAlt: (elements=LexerElements cmds=LexerCommands?)?;
-LexerElements: elements+=LexerElement*;
+LexerAlt: elements=LexerElement+ cmds=LexerCommands?;
 LexerElement
    : lexerElement=LabeledLexerElement suffix=EbnfSuffix?
    | atom=LexerAtom suffix=EbnfSuffix?
@@ -140,14 +144,16 @@ EbnfSuffix
    ;
 
 LexerAtom
-   : chars=CharacterRange
-   | terminal=Terminal
+   : string=COMMON__STRING_LITERAL (options=ElementOptions | RANGE right=COMMON__STRING_LITERAL)?
+   | token=[LexerRuleSpec:UPPER_CASE_ID] options=ElementOptions?
    | notSet=NotSet
+   | charset=CharSet
    | DOT options=ElementOptions?
    ;
 
 Atom
    : ruleRef=RuleRef
+   | terminal=COMMON__STRING_LITERAL options=ElementOptions?
    | notSet=NotSet
    | DOT options=ElementOptions?
    ;
@@ -173,7 +179,6 @@ RuleRef: ruleRef=IdentifierRef actions=ArgActionBlock? options=ElementOptions?;
 // ---------------
 // Character Range
 CharacterRange: left=COMMON__STRING_LITERAL RANGE right=COMMON__STRING_LITERAL;
-Terminal: token=[LexerRuleSpec:UPPER_CASE_ID] options=ElementOptions? | string=COMMON__STRING_LITERAL options=ElementOptions?;
 
 // Terminals may be adorned with certain options when
 // reference in the grammar: TOK<,,,>
@@ -306,9 +311,10 @@ hidden terminal COMMON__WS: Ws+;
 // ======================================================
 // Lexer modes
 // -------------------------
-// Arguments
-//mode Argument;
-// E.g., [int x, List<String> a[]]
+
+terminal COMMON__LEXER_CHAR_SET_BODY
+   : /[^ \]\\]/ | EscAny
+   ;
 
 terminal COMMON__ESCAPE
    : EscAny
@@ -419,7 +425,7 @@ terminal fragment Int: 'int';
 terminal fragment Esc: '\\';
 terminal fragment Colon: ':';
 terminal fragment DColon: '::';
-terminal fragment SQuote: /'/;
+terminal fragment SQuote: /[']/;
 terminal fragment DQuote: '"';
 terminal fragment LParen: '(';
 terminal fragment RParen: ')';

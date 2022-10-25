@@ -21,7 +21,6 @@ export class Antlr4ScopeProvider implements ScopeProvider {
         const referenceType = this.reflection.getReferenceType(context);
         const thisDocument = getDocument<GrammarSpec>(context.container);
 
-        //streamAllContents(thisDocument.parseResult.value).filter(isGrammarImport).map(this.importGrammar)
         const xxx = [...this.indexManager.allElements(GrammarSpec)];
 
         const precomputed = thisDocument.precomputedScopes;

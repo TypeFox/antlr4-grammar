@@ -968,6 +968,78 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     },
     {
       "$type": "ParserRule",
+      "name": "CharSet",
+      "definition": {
+        "$type": "Group",
+        "elements": [
+          {
+            "$type": "RuleCall",
+            "rule": {
+              "$refText": "COMMON__BEGIN_ARGUMENT"
+            },
+            "arguments": []
+          },
+          {
+            "$type": "Assignment",
+            "feature": "content",
+            "operator": "=",
+            "terminal": {
+              "$type": "RuleCall",
+              "rule": {
+                "$refText": "CharSetContent"
+              },
+              "arguments": []
+            },
+            "cardinality": "*"
+          },
+          {
+            "$type": "RuleCall",
+            "rule": {
+              "$refText": "COMMON__END_ARGUMENT"
+            },
+            "arguments": []
+          }
+        ]
+      },
+      "definesHiddenTokens": false,
+      "entry": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
+    },
+    {
+      "$type": "ParserRule",
+      "name": "CharSetContent",
+      "dataType": "string",
+      "definition": {
+        "$type": "Alternatives",
+        "elements": [
+          {
+            "$type": "RuleCall",
+            "rule": {
+              "$refText": "COMMON__LEXER_CHAR_SET_BODY"
+            },
+            "arguments": []
+          },
+          {
+            "$type": "RuleCall",
+            "rule": {
+              "$refText": "COMMON__ESCAPE"
+            },
+            "arguments": []
+          }
+        ]
+      },
+      "definesHiddenTokens": false,
+      "entry": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
+    },
+    {
+      "$type": "ParserRule",
       "name": "ArgActionBlock",
       "definition": {
         "$type": "Group",
@@ -2018,10 +2090,11 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "LexerElements"
+                "$refText": "LexerElement"
               },
               "arguments": []
-            }
+            },
+            "cardinality": "+"
           },
           {
             "$type": "Assignment",
@@ -2036,31 +2109,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             },
             "cardinality": "?"
           }
-        ],
-        "cardinality": "?"
-      },
-      "definesHiddenTokens": false,
-      "entry": false,
-      "fragment": false,
-      "hiddenTokens": [],
-      "parameters": [],
-      "wildcard": false
-    },
-    {
-      "$type": "ParserRule",
-      "name": "LexerElements",
-      "definition": {
-        "$type": "Assignment",
-        "feature": "elements",
-        "operator": "+=",
-        "terminal": {
-          "$type": "RuleCall",
-          "rule": {
-            "$refText": "LexerElement"
-          },
-          "arguments": []
-        },
-        "cardinality": "*"
+        ]
       },
       "definesHiddenTokens": false,
       "entry": false,
@@ -2962,28 +3011,100 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
         "$type": "Alternatives",
         "elements": [
           {
-            "$type": "Assignment",
-            "feature": "chars",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$refText": "CharacterRange"
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "Assignment",
+                "feature": "string",
+                "operator": "=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$refText": "COMMON__STRING_LITERAL"
+                  },
+                  "arguments": []
+                }
               },
-              "arguments": []
-            }
+              {
+                "$type": "Alternatives",
+                "elements": [
+                  {
+                    "$type": "Assignment",
+                    "feature": "options",
+                    "operator": "=",
+                    "terminal": {
+                      "$type": "RuleCall",
+                      "rule": {
+                        "$refText": "ElementOptions"
+                      },
+                      "arguments": []
+                    }
+                  },
+                  {
+                    "$type": "Group",
+                    "elements": [
+                      {
+                        "$type": "RuleCall",
+                        "rule": {
+                          "$refText": "RANGE"
+                        },
+                        "arguments": []
+                      },
+                      {
+                        "$type": "Assignment",
+                        "feature": "right",
+                        "operator": "=",
+                        "terminal": {
+                          "$type": "RuleCall",
+                          "rule": {
+                            "$refText": "COMMON__STRING_LITERAL"
+                          },
+                          "arguments": []
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "cardinality": "?"
+              }
+            ]
           },
           {
-            "$type": "Assignment",
-            "feature": "terminal",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$refText": "Terminal"
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "Assignment",
+                "feature": "token",
+                "operator": "=",
+                "terminal": {
+                  "$type": "CrossReference",
+                  "type": {
+                    "$refText": "LexerRuleSpec"
+                  },
+                  "terminal": {
+                    "$type": "RuleCall",
+                    "rule": {
+                      "$refText": "UPPER_CASE_ID"
+                    },
+                    "arguments": []
+                  },
+                  "deprecatedSyntax": false
+                }
               },
-              "arguments": []
-            }
+              {
+                "$type": "Assignment",
+                "feature": "options",
+                "operator": "=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$refText": "ElementOptions"
+                  },
+                  "arguments": []
+                },
+                "cardinality": "?"
+              }
+            ]
           },
           {
             "$type": "Assignment",
@@ -2993,6 +3114,18 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
               "$type": "RuleCall",
               "rule": {
                 "$refText": "NotSet"
+              },
+              "arguments": []
+            }
+          },
+          {
+            "$type": "Assignment",
+            "feature": "charset",
+            "operator": "=",
+            "terminal": {
+              "$type": "RuleCall",
+              "rule": {
+                "$refText": "CharSet"
               },
               "arguments": []
             }
@@ -3048,6 +3181,36 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
               },
               "arguments": []
             }
+          },
+          {
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "Assignment",
+                "feature": "terminal",
+                "operator": "=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$refText": "COMMON__STRING_LITERAL"
+                  },
+                  "arguments": []
+                }
+              },
+              {
+                "$type": "Assignment",
+                "feature": "options",
+                "operator": "=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$refText": "ElementOptions"
+                  },
+                  "arguments": []
+                },
+                "cardinality": "?"
+              }
+            ]
           },
           {
             "$type": "Assignment",
@@ -3482,88 +3645,6 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
               },
               "arguments": []
             }
-          }
-        ]
-      },
-      "definesHiddenTokens": false,
-      "entry": false,
-      "fragment": false,
-      "hiddenTokens": [],
-      "parameters": [],
-      "wildcard": false
-    },
-    {
-      "$type": "ParserRule",
-      "name": "Terminal",
-      "definition": {
-        "$type": "Alternatives",
-        "elements": [
-          {
-            "$type": "Group",
-            "elements": [
-              {
-                "$type": "Assignment",
-                "feature": "token",
-                "operator": "=",
-                "terminal": {
-                  "$type": "CrossReference",
-                  "type": {
-                    "$refText": "LexerRuleSpec"
-                  },
-                  "terminal": {
-                    "$type": "RuleCall",
-                    "rule": {
-                      "$refText": "UPPER_CASE_ID"
-                    },
-                    "arguments": []
-                  },
-                  "deprecatedSyntax": false
-                }
-              },
-              {
-                "$type": "Assignment",
-                "feature": "options",
-                "operator": "=",
-                "terminal": {
-                  "$type": "RuleCall",
-                  "rule": {
-                    "$refText": "ElementOptions"
-                  },
-                  "arguments": []
-                },
-                "cardinality": "?"
-              }
-            ]
-          },
-          {
-            "$type": "Group",
-            "elements": [
-              {
-                "$type": "Assignment",
-                "feature": "string",
-                "operator": "=",
-                "terminal": {
-                  "$type": "RuleCall",
-                  "rule": {
-                    "$refText": "COMMON__STRING_LITERAL"
-                  },
-                  "arguments": []
-                }
-              },
-              {
-                "$type": "Assignment",
-                "feature": "options",
-                "operator": "=",
-                "terminal": {
-                  "$type": "RuleCall",
-                  "rule": {
-                    "$refText": "ElementOptions"
-                  },
-                  "arguments": []
-                },
-                "cardinality": "?"
-              }
-            ]
           }
         ]
       },
@@ -4504,6 +4585,27 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     },
     {
       "$type": "TerminalRule",
+      "name": "COMMON__LEXER_CHAR_SET_BODY",
+      "definition": {
+        "$type": "TerminalAlternatives",
+        "elements": [
+          {
+            "$type": "RegexToken",
+            "regex": "[^ \\\\]\\\\\\\\]"
+          },
+          {
+            "$type": "TerminalRuleCall",
+            "rule": {
+              "$refText": "EscAny"
+            }
+          }
+        ]
+      },
+      "fragment": false,
+      "hidden": false
+    },
+    {
+      "$type": "TerminalRule",
       "name": "COMMON__ESCAPE",
       "definition": {
         "$type": "TerminalRuleCall",
@@ -5112,7 +5214,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "name": "SQuote",
       "definition": {
         "$type": "RegexToken",
-        "regex": "'"
+        "regex": "[']"
       },
       "hidden": false
     },
