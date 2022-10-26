@@ -1018,7 +1018,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "COMMON__LEXER_CHAR_SET_BODY"
+              "$refText": "ARGUMENT__LEXER_CHAR_SET_BODY"
             },
             "arguments": []
           },
@@ -3466,6 +3466,18 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
                 "cardinality": "?"
               }
             ]
+          },
+          {
+            "$type": "Assignment",
+            "feature": "charset",
+            "operator": "=",
+            "terminal": {
+              "$type": "RuleCall",
+              "rule": {
+                "$refText": "CharSet"
+              },
+              "arguments": []
+            }
           }
         ]
       },
@@ -3893,6 +3905,18 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
         "$type": "TerminalRuleCall",
         "rule": {
           "$refText": "SQuoteLiteral"
+        }
+      },
+      "fragment": false,
+      "hidden": false
+    },
+    {
+      "$type": "TerminalRule",
+      "name": "COMMON__DSTRING_LITERAL",
+      "definition": {
+        "$type": "TerminalRuleCall",
+        "rule": {
+          "$refText": "DQuoteLiteral"
         }
       },
       "fragment": false,
@@ -4585,7 +4609,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     },
     {
       "$type": "TerminalRule",
-      "name": "COMMON__LEXER_CHAR_SET_BODY",
+      "name": "ARGUMENT__LEXER_CHAR_SET_BODY",
       "definition": {
         "$type": "TerminalAlternatives",
         "elements": [
@@ -4611,18 +4635,6 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
         "$type": "TerminalRuleCall",
         "rule": {
           "$refText": "EscAny"
-        }
-      },
-      "fragment": false,
-      "hidden": false
-    },
-    {
-      "$type": "TerminalRule",
-      "name": "COMMON__DSTRING_LITERAL",
-      "definition": {
-        "$type": "TerminalRuleCall",
-        "rule": {
-          "$refText": "DQuoteLiteral"
         }
       },
       "fragment": false,
@@ -5174,11 +5186,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "fragment": true,
       "name": "Esc",
       "definition": {
-        "$type": "CharacterRange",
-        "left": {
-          "$type": "Keyword",
-          "value": "\\\\\\\\"
-        }
+        "$type": "RegexToken",
+        "regex": "\\\\\\\\"
       },
       "hidden": false
     },

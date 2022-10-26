@@ -85,7 +85,7 @@ function convertLexerErrors(lexerErrors: ILexingError[]): string | undefined {
 }
 
 function convertParserErrors(parserErrors: IRecognitionException[]) {
-    return parserErrors.map(e => `${e.token.startLine}:${e.token.startColumn}|${e.context.ruleStack}) ${e.message}`).join('\r\n');
+    return parserErrors.map(e => `${e.token.startLine}:${e.token.startColumn}|${e.context.ruleStack}) ${e.message} ${JSON.stringify(e.token.tokenType)}`).join('\r\n');
 }
 
 function convertValidationErrors(validationErrors: Diagnostic[]) {

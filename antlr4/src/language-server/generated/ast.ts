@@ -190,7 +190,7 @@ export function isCharacterRange(item: unknown): item is CharacterRange {
 }
 
 export interface CharSet extends AstNode {
-    readonly $container: LexerAtom;
+    readonly $container: LexerAtom | SetElement;
     content?: CharSetContent
 }
 
@@ -748,6 +748,7 @@ export function isRuleSpec(item: unknown): item is RuleSpec {
 
 export interface SetElement extends AstNode {
     readonly $container: BlockSet | NotSet;
+    charset?: CharSet
     options?: ElementOptions
     range?: CharacterRange
     token?: Reference<LexerRuleSpec>

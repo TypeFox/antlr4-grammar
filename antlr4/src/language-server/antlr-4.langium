@@ -47,7 +47,7 @@ ActionContent:
 
 CharSet: COMMON__BEGIN_ARGUMENT content=CharSetContent* COMMON__END_ARGUMENT;
 CharSetContent returns string
-   : COMMON__LEXER_CHAR_SET_BODY
+   : ARGUMENT__LEXER_CHAR_SET_BODY
    | COMMON__ESCAPE
    ;
 ArgActionBlock: COMMON__BEGIN_ARGUMENT contents+=ArgumentContent* COMMON__END_ARGUMENT;
@@ -166,6 +166,7 @@ SetElement
    : token=[LexerRuleSpec:UPPER_CASE_ID] options=ElementOptions?
    | range=CharacterRange
    | COMMON__STRING_LITERAL options=ElementOptions?
+   | charset=CharSet
    ;
 
 // -------------
@@ -222,6 +223,7 @@ terminal INT: DecimalNumeral;
 // may contain unicode escape sequences of the form \uxxxx, where x
 // is a valid hexadecimal number (per Unicode standard).
 terminal COMMON__STRING_LITERAL: SQuoteLiteral;
+terminal COMMON__DSTRING_LITERAL: DQuoteLiteral;
 terminal UNTERMINATED_STRING_LITERAL: USQuoteLiteral;
 
 // -------------------------
@@ -312,16 +314,12 @@ hidden terminal COMMON__WS: Ws+;
 // Lexer modes
 // -------------------------
 
-terminal COMMON__LEXER_CHAR_SET_BODY
-   : /[^ \]\\]/ | EscAny
+terminal ARGUMENT__LEXER_CHAR_SET_BODY
+   : /[^ \]\\]/ | EscAny 
    ;
 
 terminal COMMON__ESCAPE
    : EscAny
-   ;
-
-terminal COMMON__DSTRING_LITERAL
-   : DQuoteLiteral
    ;
 
 terminal COMMON__ANY
@@ -422,7 +420,7 @@ terminal fragment Int: 'int';
 
 // -----------------------------------
 // Symbols
-terminal fragment Esc: '\\';
+terminal fragment Esc: /\\/;
 terminal fragment Colon: ':';
 terminal fragment DColon: '::';
 terminal fragment SQuote: /[']/;
