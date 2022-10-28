@@ -1,6 +1,5 @@
 import { ILexingError, IRecognitionException } from "chevrotain";
-import { readFile } from "fs/promises";
-import { AstNode, EmptyFileSystem, LangiumDocument, LangiumServices } from "langium";
+import { AstNode, EmptyFileSystem, LangiumDocument } from "langium";
 import { expect } from "vitest";
 import { URI } from "vscode-uri";
 import { Diagnostic } from "vscode-languageserver";
@@ -15,6 +14,9 @@ export function parseHelper<T extends AstNode = AstNode>() {
   let activeUris: URI[] = [];
   const metaData = services.LanguageMetaData;
   const documentBuilder = services.shared.workspace.DocumentBuilder;
+  async function initialize() {
+    await services.shared.workspace.WorkspaceManager.initializeWorkspace([]);
+  }
   async function parse<K extends string>(inputs: InputFiles<K>): Promise<OutputFiles<T, K>> {
     const documents: LangiumDocument<T>[] = [];
     const hash: any = {};
@@ -42,6 +44,7 @@ export function parseHelper<T extends AstNode = AstNode>() {
     return services.workspace.AstNodeLocator.getAstNode(document, path);
   }
   return {
+    initialize,
     clear,
     getAstNode,
     parse,

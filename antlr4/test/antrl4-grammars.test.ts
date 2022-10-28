@@ -1,14 +1,16 @@
-import { describe, it, expect, afterEach } from "vitest";
+import { describe, it, expect, afterEach, beforeAll } from "vitest";
 import { parseHelper } from "./utils/parseHelper";
 import {
   GrammarSpec,
 } from "../src/language-server/generated/ast";
 import { getAntlr4Grammars } from "./utils/antlr4-grammars";
-import { isLeafCstNode, streamCst } from "langium";
 
-const { clear, parse, expectOk, getAstNode } = parseHelper<GrammarSpec>();
 
 describe("Antlr4 grammars", async () => {
+  const { clear, parse, expectOk, initialize } = await parseHelper<GrammarSpec>();
+
+  beforeAll(() => initialize());
+
   afterEach(() => clear());
 
   const grammars = await getAntlr4Grammars();
