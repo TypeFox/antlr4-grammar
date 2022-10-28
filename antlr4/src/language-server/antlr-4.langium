@@ -110,8 +110,8 @@ LexerCommands: RARROW cmds+=LexerCommand (COMMA cmds+=LexerCommand)*;
 LexerCommand: name=LexerCommandName LPAREN expr=LexerCommandExpr RPAREN
             | name=LexerCommandName
             ;
-LexerCommandName: IdentifierRef | MODE;
-LexerCommandExpr: IdentifierRef | INT;
+LexerCommandName: name=(LOWER_CASE_ID | MODE);
+LexerCommandExpr: name=(UPPER_CASE_ID | INT);
 
 // --------------------
 // Rule Alts

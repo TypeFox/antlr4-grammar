@@ -12,7 +12,7 @@ describe("Antlr4 grammars", async () => {
   afterEach(() => clear());
 
   const grammars = await getAntlr4Grammars();
-  Object.keys(grammars).filter(g => g === 'json').forEach(name => {
+  Object.keys(grammars).filter(g => g === 'json5').forEach(name => {
     it(name, async () => {
       const documents = await parse(grammars[name]);
       for (const documentFilename of Object.keys(documents)) {

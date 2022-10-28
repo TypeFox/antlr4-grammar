@@ -33,22 +33,6 @@ export function isBlockSuffix(item: unknown): item is BlockSuffix {
 
 export type CharSetContent = string;
 
-export type LexerCommandExpr = IdentifierRef;
-
-export const LexerCommandExpr = 'LexerCommandExpr';
-
-export function isLexerCommandExpr(item: unknown): item is LexerCommandExpr {
-    return reflection.isInstance(item, LexerCommandExpr);
-}
-
-export type LexerCommandName = IdentifierRef;
-
-export const LexerCommandName = 'LexerCommandName';
-
-export function isLexerCommandName(item: unknown): item is LexerCommandName {
-    return reflection.isInstance(item, LexerCommandName);
-}
-
 export type LexerRuleBlock = LexerAltList;
 
 export const LexerRuleBlock = 'LexerRuleBlock';
@@ -360,7 +344,7 @@ export function isGrammarType(item: unknown): item is GrammarType {
 }
 
 export interface IdentifierRef extends AstNode {
-    readonly $container: ElementOption | LabeledElement | LexerCommand | RuleRef;
+    readonly $container: ElementOption | LabeledElement | RuleRef;
     lexerRuleRef?: Reference<LexerRuleSpec>
     parserRuleRef?: Reference<ParserRuleSpec>
 }
@@ -480,6 +464,28 @@ export const LexerCommand = 'LexerCommand';
 
 export function isLexerCommand(item: unknown): item is LexerCommand {
     return reflection.isInstance(item, LexerCommand);
+}
+
+export interface LexerCommandExpr extends AstNode {
+    readonly $container: LexerCommand;
+    name: string
+}
+
+export const LexerCommandExpr = 'LexerCommandExpr';
+
+export function isLexerCommandExpr(item: unknown): item is LexerCommandExpr {
+    return reflection.isInstance(item, LexerCommandExpr);
+}
+
+export interface LexerCommandName extends AstNode {
+    readonly $container: LexerCommand;
+    name: string
+}
+
+export const LexerCommandName = 'LexerCommandName';
+
+export function isLexerCommandName(item: unknown): item is LexerCommandName {
+    return reflection.isInstance(item, LexerCommandName);
 }
 
 export interface LexerCommands extends AstNode {
@@ -807,9 +813,6 @@ export class Antlr4AstReflection implements AstReflection {
             }
             case EbnfSuffix: {
                 return this.isSubtype(BlockSuffix, supertype);
-            }
-            case IdentifierRef: {
-                return this.isSubtype(LexerCommandName, supertype) || this.isSubtype(LexerCommandExpr, supertype);
             }
             case LexerAltList: {
                 return this.isSubtype(LexerRuleBlock, supertype);

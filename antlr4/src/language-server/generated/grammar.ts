@@ -2502,23 +2502,28 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "$type": "ParserRule",
       "name": "LexerCommandName",
       "definition": {
-        "$type": "Alternatives",
-        "elements": [
-          {
-            "$type": "RuleCall",
-            "rule": {
-              "$refText": "IdentifierRef"
+        "$type": "Assignment",
+        "feature": "name",
+        "operator": "=",
+        "terminal": {
+          "$type": "Alternatives",
+          "elements": [
+            {
+              "$type": "RuleCall",
+              "rule": {
+                "$refText": "LOWER_CASE_ID"
+              },
+              "arguments": []
             },
-            "arguments": []
-          },
-          {
-            "$type": "RuleCall",
-            "rule": {
-              "$refText": "MODE"
-            },
-            "arguments": []
-          }
-        ]
+            {
+              "$type": "RuleCall",
+              "rule": {
+                "$refText": "MODE"
+              },
+              "arguments": []
+            }
+          ]
+        }
       },
       "definesHiddenTokens": false,
       "entry": false,
@@ -2531,23 +2536,28 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "$type": "ParserRule",
       "name": "LexerCommandExpr",
       "definition": {
-        "$type": "Alternatives",
-        "elements": [
-          {
-            "$type": "RuleCall",
-            "rule": {
-              "$refText": "IdentifierRef"
+        "$type": "Assignment",
+        "feature": "name",
+        "operator": "=",
+        "terminal": {
+          "$type": "Alternatives",
+          "elements": [
+            {
+              "$type": "RuleCall",
+              "rule": {
+                "$refText": "UPPER_CASE_ID"
+              },
+              "arguments": []
             },
-            "arguments": []
-          },
-          {
-            "$type": "RuleCall",
-            "rule": {
-              "$refText": "INT"
-            },
-            "arguments": []
-          }
-        ]
+            {
+              "$type": "RuleCall",
+              "rule": {
+                "$refText": "INT"
+              },
+              "arguments": []
+            }
+          ]
+        }
       },
       "definesHiddenTokens": false,
       "entry": false,
