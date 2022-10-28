@@ -1,5 +1,4 @@
 import { ScopeProvider, AstReflection, NameProvider, AstNodeDescriptionProvider, IndexManager, LangiumServices, ReferenceInfo, Scope, Stream, AstNodeDescription, getDocument, AstNode, stream, ScopeOptions, StreamScope, interruptAndCheck, LangiumDocument, MultiMap, PrecomputedScopes, ScopeComputation, streamAst, getContainerOfType } from "langium";
-import { GrammarImport } from "langium/lib/grammar/generated/ast";
 import { CancellationToken } from "vscode-languageserver";
 import { GrammarSpec, isGrammarSpec, isLexerRuleSpec, isParserRuleSpec } from "./generated/ast";
 
@@ -21,8 +20,6 @@ export class Antlr4ScopeProvider implements ScopeProvider {
         const referenceType = this.reflection.getReferenceType(context);
         const thisDocument = getDocument<GrammarSpec>(context.container);
 
-        const xxx = [...this.indexManager.allElements(GrammarSpec)];
-
         const precomputed = thisDocument.precomputedScopes;
         if (precomputed) {
             const spec = getContainerOfType(context.container, isGrammarSpec)!;
@@ -41,10 +38,6 @@ export class Antlr4ScopeProvider implements ScopeProvider {
             result = this.createScope(scopes[i], result);
         }
         return result;
-    }
-
-    private importGrammar(grammarImport: GrammarImport) {
-
     }
 
     /**

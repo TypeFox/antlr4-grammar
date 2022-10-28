@@ -20,12 +20,15 @@ import {
 
 export const { EOF, BuiltInDocument } = (function () {
   const eof = {
-    $type: LexerRuleSpec,
-    fragment: false,
-    name: "EOF",
-    block: {
-      $type: LexerAltList,
-      alts: [],
+    $type: RuleSpec,
+    rule: {
+      $type: LexerRuleSpec,
+      fragment: false,
+      name: "EOF",
+      block: {
+        $type: LexerAltList,
+        alts: [],
+      },
     },
   };
   const builtInDocument = {
@@ -43,12 +46,7 @@ export const { EOF, BuiltInDocument } = (function () {
     prequels: [],
     rules: {
       $type: Rules,
-      rules: [
-        {
-          $type: RuleSpec,
-          rule: eof,
-        },
-      ],
+      rules: [eof],
     },
     specs: [],
   };
@@ -57,7 +55,7 @@ export const { EOF, BuiltInDocument } = (function () {
 
   return {
     BuiltInDocument: builtInDocument as unknown as GrammarSpec,
-    EOF: eof as unknown as LexerRuleSpec,
+    EOF: eof as unknown as RuleSpec,
   };
 })();
 

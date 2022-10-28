@@ -7,6 +7,7 @@ import { Antlr4ValidationRegistry, Antlr4Validator } from './validation';
 import { Antlr4TokenBuilder } from './tokenBuilder';
 import { Antlr4ScopeComputation, Antlr4ScopeProvider } from './scope';
 import { Antlr4WorkspaceManager } from './built-in';
+import { Antlr4DocumentBuilder } from './document-builder';
 
 /**
  * Declaration of custom services - add your own service classes here.
@@ -44,7 +45,8 @@ export const Antlr4Module: Module<Antlr4Services, PartialLangiumServices & Antlr
 
 export const Antlr4SharedModule: Module<LangiumSharedServices, PartialLangiumSharedServices> = {
     workspace: {
-            WorkspaceManager: (services) => new Antlr4WorkspaceManager(services),
+        WorkspaceManager: (services) => new Antlr4WorkspaceManager(services),
+        DocumentBuilder:  services => new Antlr4DocumentBuilder(services),
     }
 };
 
