@@ -14,7 +14,7 @@ PrequelConstruct: options=OptionsSpec | grammars=DelegateGrammars | tokens=Token
 OptionsSpec: OPTIONS (options+=Option SEMI)* NORMAL__ACTION__END_ACTION;
 Option: name=LOWER_CASE_ID ASSIGN value=OptionValue;
 OptionValue
-   : ids+=UPPER_CASE_ID (DOT ids+=UPPER_CASE_ID)*
+   : ids+=(UPPER_CASE_ID|LOWER_CASE_ID) (DOT ids+=(UPPER_CASE_ID|LOWER_CASE_ID))*
    | string=COMMON__STRING_LITERAL
    | action=ActionBlock
    | number=INT

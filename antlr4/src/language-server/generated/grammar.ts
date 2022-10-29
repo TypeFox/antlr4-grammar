@@ -398,11 +398,23 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
                 "feature": "ids",
                 "operator": "+=",
                 "terminal": {
-                  "$type": "RuleCall",
-                  "rule": {
-                    "$refText": "UPPER_CASE_ID"
-                  },
-                  "arguments": []
+                  "$type": "Alternatives",
+                  "elements": [
+                    {
+                      "$type": "RuleCall",
+                      "rule": {
+                        "$refText": "UPPER_CASE_ID"
+                      },
+                      "arguments": []
+                    },
+                    {
+                      "$type": "RuleCall",
+                      "rule": {
+                        "$refText": "LOWER_CASE_ID"
+                      },
+                      "arguments": []
+                    }
+                  ]
                 }
               },
               {
@@ -420,11 +432,23 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
                     "feature": "ids",
                     "operator": "+=",
                     "terminal": {
-                      "$type": "RuleCall",
-                      "rule": {
-                        "$refText": "UPPER_CASE_ID"
-                      },
-                      "arguments": []
+                      "$type": "Alternatives",
+                      "elements": [
+                        {
+                          "$type": "RuleCall",
+                          "rule": {
+                            "$refText": "UPPER_CASE_ID"
+                          },
+                          "arguments": []
+                        },
+                        {
+                          "$type": "RuleCall",
+                          "rule": {
+                            "$refText": "LOWER_CASE_ID"
+                          },
+                          "arguments": []
+                        }
+                      ]
                     }
                   }
                 ],
@@ -4138,11 +4162,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "$type": "TerminalRule",
       "name": "IMPORT",
       "definition": {
-        "$type": "CharacterRange",
-        "left": {
-          "$type": "Keyword",
-          "value": "import"
-        }
+        "$type": "RegexToken",
+        "regex": "import"
       },
       "fragment": false,
       "hidden": false

@@ -19,7 +19,7 @@ describe("Antlr4 grammars", async () => {
     }
   });
   
-  it('parsing cherrypicked grammar', async () => {
+  it.skip('parsing cherrypicked grammar', async () => {
     const documents = await parse(grammars['z']);
     for (const documentFilename of Object.keys(documents)) {
       const document = documents[documentFilename];
