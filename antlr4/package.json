@@ -58,12 +58,14 @@
         "commander": "^8.0.0",
         "core-js-pure": "^3.25.5",
         "langium": "file:../langium/packages/langium",
+        "toposort": "^2.0.2",
         "vscode-languageclient": "^8.0.2",
         "vscode-languageserver": "^8.0.2",
         "vscode-uri": "^3.0.2"
     },
     "devDependencies": {
         "@types/node": "^14.17.3",
+        "@types/toposort": "^2.0.3",
         "@types/vscode": "^1.56.0",
         "@typescript-eslint/eslint-plugin": "^4.14.1",
         "@typescript-eslint/parser": "^4.14.1",

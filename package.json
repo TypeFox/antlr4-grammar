@@ -1,8 +1,0 @@
-{
-  "dependencies": {
-    "toposort": "^2.0.2"
-  },
-  "devDependencies": {
-    "@types/toposort": "^2.0.3"
-  }
-}
