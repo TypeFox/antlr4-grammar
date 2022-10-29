@@ -2,6 +2,7 @@ import {
   DefaultWorkspaceManager,
   DocumentState,
   LangiumDocument,
+  LangiumDocumentFactory,
   LangiumSharedServices,
   linkContentToContainer,
   streamAst,
@@ -51,7 +52,7 @@ export const { EOF, BuiltInDocument } = (function () {
     specs: [],
   };
   streamAst(builtInDocument).forEach(linkContentToContainer);
-  streamAst(builtInDocument).forEach((a) => Object.freeze(a));
+  //streamAst(builtInDocument).forEach((a) => Object.freeze(a));
 
   return {
     BuiltInDocument: builtInDocument as unknown as GrammarSpec,
@@ -60,25 +61,19 @@ export const { EOF, BuiltInDocument } = (function () {
 })();
 
 export class Antlr4WorkspaceManager extends DefaultWorkspaceManager {
+  private langiumDocumentFactory: LangiumDocumentFactory;
   constructor(services: LangiumSharedServices) {
     super(services);
+    this.langiumDocumentFactory = services.workspace.LangiumDocumentFactory;
   }
 
   protected loadAdditionalDocuments(
     _folders: WorkspaceFolder[],
     _collector: (document: LangiumDocument<GrammarSpec>) => void
   ): Promise<void> {
-    _collector({
-      parseResult: {
-        lexerErrors: [],
-        parserErrors: [],
-        value: BuiltInDocument,
-      },
-      references: [],
-      uri: URI.file("file://in-memory/builtIn.langium"),
-      state: DocumentState.Validated,
-      textDocument: null!,
-    });
+    const uri = URI.file("file://in-memory/builtIn.g4");
+    const document = this.langiumDocumentFactory.fromModel<GrammarSpec>(BuiltInDocument, uri);
+    _collector(document);
     return Promise.resolve();
   }
 }

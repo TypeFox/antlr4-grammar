@@ -1,12 +1,14 @@
-import { describe, it, afterEach } from "vitest";
+import { describe, it, afterEach, beforeAll } from "vitest";
 import { parseHelper } from "./utils/parseHelper";
 
 describe("parser", () => {
-  const { parse, expectOk, clear } = parseHelper();
+  const { parse, expectOk, clear, initialize } = parseHelper();
+
+  beforeAll(()=> initialize());
 
   afterEach(() => clear());
 
-  it("parse", async () => {
+  it("parse Hallo token", async () => {
     const { Hallo: document } = await parse({
       Hallo: `
             grammar Hallo;
@@ -17,7 +19,7 @@ describe("parser", () => {
     expectOk(document);
   });
 
-  it("parse token", async () => {
+  it("parse fragment tokens", async () => {
     const { document } = await parse({
       document: `
             grammar Hallo;

@@ -266,8 +266,8 @@ terminal MODE: 'mode';
 
 // -------------------------
 // Punctuation
-terminal COLON: Colon;
 terminal COLONCOLON: DColon;
+terminal COLON: Colon;
 terminal COMMA: Comma;
 terminal SEMI: Semi;
 terminal LPAREN: LParen;

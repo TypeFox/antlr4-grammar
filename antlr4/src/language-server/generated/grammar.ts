@@ -4306,11 +4306,11 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     },
     {
       "$type": "TerminalRule",
-      "name": "COLON",
+      "name": "COLONCOLON",
       "definition": {
         "$type": "TerminalRuleCall",
         "rule": {
-          "$refText": "Colon"
+          "$refText": "DColon"
         }
       },
       "fragment": false,
@@ -4318,11 +4318,11 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     },
     {
       "$type": "TerminalRule",
-      "name": "COLONCOLON",
+      "name": "COLON",
       "definition": {
         "$type": "TerminalRuleCall",
         "rule": {
-          "$refText": "DColon"
+          "$refText": "Colon"
         }
       },
       "fragment": false,

@@ -1,6 +1,6 @@
 import { ScopeProvider, AstReflection, NameProvider, AstNodeDescriptionProvider, IndexManager, LangiumServices, ReferenceInfo, Scope, Stream, AstNodeDescription, getDocument, AstNode, stream, ScopeOptions, StreamScope, interruptAndCheck, LangiumDocument, MultiMap, PrecomputedScopes, ScopeComputation, streamAst, getContainerOfType } from "langium";
 import { CancellationToken } from "vscode-languageserver";
-import { GrammarSpec, isGrammarSpec, isLexerRuleSpec, isParserRuleSpec } from "./generated/ast";
+import { GrammarSpec, isGrammarSpec, isLexerRuleSpec, isParserRuleSpec, isRules } from "./generated/ast";
 
 export class Antlr4ScopeProvider implements ScopeProvider {
     protected readonly reflection: AstReflection;
@@ -83,7 +83,12 @@ export class Antlr4ScopeComputation implements ScopeComputation {
 
     async computeExports(document: LangiumDocument, cancelToken = CancellationToken.None): Promise<AstNodeDescription[]> {
         const exports: AstNodeDescription[] = [];
-        streamAst(document.parseResult.value).filter(isGrammarSpec).forEach(rs => this.exportNode(rs, exports, document))
+        streamAst(document.parseResult.value)
+          .filter(isRules)
+          .flatMap(r => r.rules)
+          .forEach(rs => this.exportNode(rs, [
+            this.descriptions.createDescription(rs.rule, rs.rule.name, document)
+          ], document))
         return exports;
     }
     protected exportNode(node: AstNode, exports: AstNodeDescription[], document: LangiumDocument): void {
