@@ -105,17 +105,11 @@ export class Antlr4ScopeComputation implements ScopeComputation {
         // Here we navigate the full AST - local scopes shall be available in the whole document
         for (const node of streamAst(rootNode)) {
             await interruptAndCheck(cancelToken);
-            if(isGrammarSpec(node)) {
-                for (const rule of node.rules.rules) {
-                    let description: AstNodeDescription|null = null;
-                    if(isLexerRuleSpec(rule.rule)) {
-                        description = this.descriptions.createDescription(rule, rule.rule.name, document)
-                    } else if(isParserRuleSpec(rule.rule)) {
-                        description = this.descriptions.createDescription(rule, rule.rule.name, document)
-                    }
-                    if(description) {
-                        scopes.add(node, description);
-                    }
+            if(isRules(node)) {
+                for (const rule of node.rules) {
+                    const description = this.descriptions.createDescription(rule, rule.rule.name, rule.$document);
+                    console.log({uri:description.documentUri.toString(),  path: description.path, name: description.name})
+                    scopes.add(node, description);
                 }
             }
         }

@@ -6,7 +6,6 @@ import {
   LangiumDocument,
   LangiumSharedServices,
   linkContentToContainer,
-  streamAst,
 } from "langium";
 import { CancellationToken } from "vscode-languageclient";
 import { URI } from "vscode-uri";
@@ -90,8 +89,11 @@ export class Antlr4DocumentBuilder extends DefaultDocumentBuilder {
         document
       });
     }
+    const firsts: Grammar[] = [];
     for (const [key, target] of map) {
-      for (const imp of target.imports) {
+      if(target.imports.length === 0) {
+        firsts.push(target);
+      } else for (const imp of target.imports) {
         const source = map.get(imp.name);
         if (!source) {
           report(target.document, DiagnosticSeverity.Error, `Grammar ${imp.name} is missing within '${key}'!`, imp.astNode);
@@ -101,25 +103,31 @@ export class Antlr4DocumentBuilder extends DefaultDocumentBuilder {
       }
     }
 
-    const order = toposort<Grammar>(edges);
+    const order = firsts.concat(toposort<Grammar>(edges));
     for (const target of order) {
       for (const imp of target.imports) {
         const source = map.get(imp.name)!;
         for (const [name, rule] of source.rules) {
           if(!target.rules.has(name)) {
-            target.spec.rules.rules.push(rule);
+            const copy = {...rule};
+            target.spec.rules.rules.push(copy);
+            linkContentToContainer(copy);
           }
         }
         for (const [name, mode] of source.modes) {
           if(!target.modes.has(name)) {
-            target.spec.specs.push(mode);
+            const copy = { ...mode };
+            target.spec.specs.push(copy);
+            linkContentToContainer(copy);
           }
         }
       }
     }
-
+    
     for (const target of order) {
-      target.spec.rules.rules.push({...EOF});
+      const copy = {...EOF};
+      target.spec.rules.rules.push(copy);
+      linkContentToContainer(target.spec.rules);
     }
 
     if(diagnostics.size !== 0) {

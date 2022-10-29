@@ -24,7 +24,7 @@ describe("parser", () => {
       document: `
             grammar Hallo;
             start: ESC;
-            fragment ESC: '\\\\\\' (["\\\\\\/bfnrt] | UNICODE);
+            fragment ESC: '\\\\' (["\\\\/bfnrt] | UNICODE);
             fragment UNICODE: 'u' HEX HEX HEX HEX;
             fragment HEX: [0-9a-fA-F];
         `,
