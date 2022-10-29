@@ -99,11 +99,23 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "feature": "name",
             "operator": "=",
             "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$refText": "UPPER_CASE_ID"
-              },
-              "arguments": []
+              "$type": "Alternatives",
+              "elements": [
+                {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$refText": "UPPER_CASE_ID"
+                  },
+                  "arguments": []
+                },
+                {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$refText": "LOWER_CASE_ID"
+                  },
+                  "arguments": []
+                }
+              ]
             }
           },
           {

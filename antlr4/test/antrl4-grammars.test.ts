@@ -4,8 +4,7 @@ import { GrammarSpec } from "../src/language-server/generated/ast";
 import { getAntlr4Grammars } from "./utils/antlr4-grammars";
 
 describe("Antlr4 grammars", async () => {
-  const { clear, parse, expectOk, initialize } =
-    await parseHelper<GrammarSpec>();
+  const { clear, parse, expectOk, initialize } = await parseHelper<GrammarSpec>();
 
   beforeAll(() => initialize());
 
