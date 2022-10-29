@@ -10,22 +10,27 @@
     },
     {
       "name": "keyword.control.antlr-4",
-      "match": "\\b(Hello|person)\\b"
-    },
-    {
-      "name": "string.quoted.double.antlr-4",
-      "begin": "\"",
-      "end": "\""
-    },
-    {
-      "name": "string.quoted.single.antlr-4",
-      "begin": "'",
-      "end": "'"
+      "match": ""
     }
   ],
   "repository": {
     "comments": {
       "patterns": [
+        {
+          "name": "comment.block.antlr-4",
+          "begin": "/\\*\\*",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.antlr-4"
+            }
+          },
+          "end": "\\*/",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.antlr-4"
+            }
+          }
+        },
         {
           "name": "comment.block.antlr-4",
           "begin": "/\\*",

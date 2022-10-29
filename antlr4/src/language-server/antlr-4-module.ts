@@ -1,10 +1,13 @@
 import {
     createDefaultModule, createDefaultSharedModule, DefaultSharedModuleContext, inject,
-    LangiumServices, LangiumSharedServices, Module, PartialLangiumServices
+    LangiumServices, LangiumSharedServices, Module, PartialLangiumServices, PartialLangiumSharedServices
 } from 'langium';
 import { Antlr4GeneratedModule, Antlr4GeneratedSharedModule } from './generated/module';
-import { Antlr4ValidationRegistry, Antlr4Validator } from './antlr-4-validator';
+import { Antlr4ValidationRegistry, Antlr4Validator } from './validation';
 import { Antlr4TokenBuilder } from './tokenBuilder';
+import { Antlr4ScopeComputation, Antlr4ScopeProvider } from './scope';
+import { Antlr4WorkspaceManager } from './built-in';
+import { Antlr4DocumentBuilder } from './document-builder';
 
 /**
  * Declaration of custom services - add your own service classes here.
@@ -30,9 +33,20 @@ export const Antlr4Module: Module<Antlr4Services, PartialLangiumServices & Antlr
     parser: {
         TokenBuilder: () => new Antlr4TokenBuilder()
     },
+    references: {
+        ScopeComputation: (svc) => new Antlr4ScopeComputation(svc),
+        ScopeProvider: (svc) => new Antlr4ScopeProvider(svc),
+    },
     validation: {
         ValidationRegistry: (services) => new Antlr4ValidationRegistry(services),
-        Antlr4Validator: () => new Antlr4Validator()
+        Antlr4Validator: () => new Antlr4Validator(),
+    },
+};
+
+export const Antlr4SharedModule: Module<LangiumSharedServices, PartialLangiumSharedServices> = {
+    workspace: {
+        WorkspaceManager: (services) => new Antlr4WorkspaceManager(services),
+        DocumentBuilder:  services => new Antlr4DocumentBuilder(services),
     }
 };
 
@@ -56,8 +70,9 @@ export function createAntlr4Services(context?: DefaultSharedModuleContext): {
     Antlr4: Antlr4Services
 } {
     const shared = inject(
-        createDefaultSharedModule(context),
-        Antlr4GeneratedSharedModule
+        createDefaultSharedModule(context!),
+        Antlr4GeneratedSharedModule,
+        Antlr4SharedModule
     );
     const Antlr4 = inject(
         createDefaultModule({ shared }),

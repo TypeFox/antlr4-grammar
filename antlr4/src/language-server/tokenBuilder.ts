@@ -1,26 +1,33 @@
 import { TokenType, TokenVocabulary } from "chevrotain";
-import { DefaultTokenBuilder, Grammar, TerminalRule } from "langium";
+import { DefaultTokenBuilder, getAllReachableRules, Grammar, stream } from "langium";
+import { TerminalRule } from "langium/lib/grammar/generated/ast";
 
-type LexerMode = 'normal'|'argument'|'targetLanguageAction';
+type LexerMode = 'normal'|'argument'|'action';
 
 const LexerActions: Record<string, LexerMode|null> = {
-    BEGIN_ACTION: "targetLanguageAction",
-    BEGIN_ARGUMENT: 'argument',
-    RBRACE: null,
-    RBRACK: null
+    COMMON__BEGIN_ARGUMENT: 'argument',
+    COMMON__END_ARGUMENT: null,
+    COMMON__BEGIN_ACTION: "action",
+    COMMON__END_ACTION: null
 };
 
 export class Antlr4TokenBuilder extends DefaultTokenBuilder {
     buildTokens(grammar: Grammar, options?: { caseInsensitive?: boolean }): TokenVocabulary {
-        const tokenTypes: TokenType[] = super.buildTokens(grammar, options) as TokenType[];
-        const TARGET_LANGUAGE_ACTION = 'TARGET_LANGUAGE_ACTION__';
+        const reachableRules = stream(getAllReachableRules(grammar, false));
+        const terminalTokens: TokenType[] = this.buildTerminalTokens(reachableRules);
+        const tokens: TokenType[] = this.buildKeywordTokens(reachableRules, terminalTokens, options);
+        const tokenTypes: TokenType[] = tokens.concat(terminalTokens)
+        const ACTION = 'ACTION__';
         const ARGUMENT = 'ARGUMENT__';
+        const COMMON = 'COMMON__';
+        const ANY = 'COMMON__ANY';
 
-        const CommonContent = tokenTypes.filter(e => ['STRING_LITERAL', 'DQUOTE_STRING_LITERAL', 'BEGIN_ACTION', 'BEGIN_ARGUMENT', 'ESCAPE', 'LINE_COMMENT', 'BLOCK_COMMENT', 'DOC_COMMENT', 'ANY_CONTENT'].includes(e.name))
+        const CommonContentRaw = tokenTypes.filter(e => e.name.startsWith(COMMON));
+        const CommonContent = CommonContentRaw.filter(e => e.name !== ANY).concat(CommonContentRaw.filter(e => e.name === ANY));
         const modes: Record<LexerMode, TokenType[]> = {
-            normal: tokenTypes.filter(e => [ARGUMENT, TARGET_LANGUAGE_ACTION].every(p => !e.name.startsWith(p))),
-            argument: tokenTypes.filter(e => e.name.startsWith(ARGUMENT)).concat(CommonContent),
-            targetLanguageAction: tokenTypes.filter(e => e.name.startsWith(TARGET_LANGUAGE_ACTION)).concat(CommonContent),
+            normal: tokenTypes.filter(e => [ARGUMENT, ACTION, COMMON].every(p => !e.name.startsWith(p))).concat(CommonContent),
+            argument: tokenTypes.filter(e => e.name.includes(ARGUMENT)).concat(CommonContent),
+            action: tokenTypes.filter(e => e.name.includes(ACTION)).concat(CommonContent),
         };
         return {
             modes,
