@@ -313,7 +313,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "COMMON__END_ACTION"
+              "$refText": "NORMAL__ACTION__END_ACTION"
             },
             "arguments": []
           }
@@ -339,7 +339,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "UPPER_CASE_ID"
+                "$refText": "LOWER_CASE_ID"
               },
               "arguments": []
             }
@@ -623,7 +623,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "COMMON__END_ACTION"
+              "$refText": "NORMAL__ACTION__END_ACTION"
             },
             "arguments": []
           }
@@ -665,7 +665,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "COMMON__END_ACTION"
+              "$refText": "NORMAL__ACTION__END_ACTION"
             },
             "arguments": []
           }
@@ -797,7 +797,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "UPPER_CASE_ID"
+                "$refText": "LOWER_CASE_ID"
               },
               "arguments": []
             }
@@ -883,7 +883,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "COMMON__BEGIN_ACTION"
+              "$refText": "NORMAL__ACTION__BEGIN_ACTION"
             },
             "arguments": []
           },
@@ -903,7 +903,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "COMMON__END_ACTION"
+              "$refText": "NORMAL__ACTION__END_ACTION"
             },
             "arguments": []
           }
@@ -975,7 +975,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "COMMON__BEGIN_ARGUMENT"
+              "$refText": "NORMAL__ARGUMENT__BEGIN_ARGUMENT"
             },
             "arguments": []
           },
@@ -995,7 +995,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "COMMON__END_ARGUMENT"
+              "$refText": "NORMAL__ARGUMENT__END_ARGUMENT"
             },
             "arguments": []
           }
@@ -1047,7 +1047,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "COMMON__BEGIN_ARGUMENT"
+              "$refText": "NORMAL__ARGUMENT__BEGIN_ARGUMENT"
             },
             "arguments": []
           },
@@ -1067,7 +1067,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "COMMON__END_ARGUMENT"
+              "$refText": "NORMAL__ARGUMENT__END_ARGUMENT"
             },
             "arguments": []
           }
@@ -3756,7 +3756,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "IdentifierRef"
+                "$refText": "LOWER_CASE_ID"
               },
               "arguments": []
             }
@@ -3781,7 +3781,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
                     {
                       "$type": "RuleCall",
                       "rule": {
-                        "$refText": "IdentifierRef"
+                        "$refText": "LOWER_CASE_ID"
                       },
                       "arguments": []
                     },
@@ -3946,7 +3946,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     },
     {
       "$type": "TerminalRule",
-      "name": "COMMON__BEGIN_ARGUMENT",
+      "name": "NORMAL__ARGUMENT__BEGIN_ARGUMENT",
       "definition": {
         "$type": "TerminalRuleCall",
         "rule": {
@@ -3958,7 +3958,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     },
     {
       "$type": "TerminalRule",
-      "name": "COMMON__BEGIN_ACTION",
+      "name": "NORMAL__ACTION__BEGIN_ACTION",
       "definition": {
         "$type": "TerminalRuleCall",
         "rule": {
@@ -4378,7 +4378,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     },
     {
       "$type": "TerminalRule",
-      "name": "COMMON__END_ACTION",
+      "name": "NORMAL__ACTION__END_ACTION",
       "definition": {
         "$type": "TerminalRuleCall",
         "rule": {
@@ -4390,7 +4390,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     },
     {
       "$type": "TerminalRule",
-      "name": "COMMON__END_ARGUMENT",
+      "name": "NORMAL__ARGUMENT__END_ARGUMENT",
       "definition": {
         "$type": "TerminalRuleCall",
         "rule": {

@@ -12,8 +12,16 @@ describe("Antlr4 grammars", async () => {
   afterEach(() => clear());
 
   const grammars = await getAntlr4Grammars();
-  it.each(Object.keys(grammars))('recognizing %s', async (name) => {
+  it.each(Object.keys(grammars))('parsing "%s" grammar', async (name) => {
     const documents = await parse(grammars[name]);
+    for (const documentFilename of Object.keys(documents)) {
+      const document = documents[documentFilename];
+      expectOk(document);
+    }
+  });
+  
+  it('parsing cherrypicked grammar', async () => {
+    const documents = await parse(grammars['z']);
     for (const documentFilename of Object.keys(documents)) {
       const document = documents[documentFilename];
       expectOk(document);

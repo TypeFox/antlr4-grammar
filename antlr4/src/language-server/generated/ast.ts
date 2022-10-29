@@ -249,8 +249,8 @@ export function isElement(item: unknown): item is Element {
 
 export interface ElementOption extends AstNode {
     readonly $container: ElementOptions;
-    ref: IdentifierRef
-    value?: IdentifierRef | string
+    ref: string
+    value?: string
 }
 
 export const ElementOption = 'ElementOption';
@@ -344,7 +344,7 @@ export function isGrammarType(item: unknown): item is GrammarType {
 }
 
 export interface IdentifierRef extends AstNode {
-    readonly $container: ElementOption | LabeledElement | RuleRef;
+    readonly $container: LabeledElement | RuleRef;
     lexerRuleRef?: Reference<LexerRuleSpec>
     parserRuleRef?: Reference<ParserRuleSpec>
 }

@@ -23,6 +23,7 @@ export class Antlr4Validator {
 
     checkDuplicatedRules(grammar: GrammarSpec, accept: ValidationAcceptor): void {
         const groups: Record<string, RuleSpec[]> = {};
+        console.log(JSON.stringify(grammar.rules.rules.map(r=>r.rule.name)))
         grammar.rules.rules.forEach(r => {
             groups[r.rule.name] ??= [];
             groups[r.rule.name].push(r);
@@ -31,7 +32,7 @@ export class Antlr4Validator {
             if (Object.prototype.hasOwnProperty.call(groups, name)) {
                 const rules = groups[name];
                 if(rules.length > 1) {
-                    rules.forEach(r => accept('error', 'Duplicated rule name', {node: r.rule, property: 'name' }));                    
+                    rules.forEach(r => accept('error', 'Duplicated rule name "'+r.rule.name+'"', {node: r.rule, property: 'name' }));                    
                 }
             }
         }

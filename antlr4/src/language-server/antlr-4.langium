@@ -11,8 +11,8 @@ PrequelConstruct: options=OptionsSpec | grammars=DelegateGrammars | tokens=Token
 
 // ------------
 // Options - things that affect analysis and/or code generation
-OptionsSpec: OPTIONS (options+=Option SEMI)* COMMON__END_ACTION;
-Option: name=UPPER_CASE_ID ASSIGN value=OptionValue;
+OptionsSpec: OPTIONS (options+=Option SEMI)* NORMAL__ACTION__END_ACTION;
+Option: name=LOWER_CASE_ID ASSIGN value=OptionValue;
 OptionValue
    : ids+=UPPER_CASE_ID (DOT ids+=UPPER_CASE_ID)*
    | string=COMMON__STRING_LITERAL
@@ -27,16 +27,16 @@ DelegateGrammar: alias=UPPER_CASE_ID ASSIGN name=UPPER_CASE_ID | name=UPPER_CASE
 
 // ------------
 // Tokens & Channels
-TokensSpec: TOKENS list=IdList? COMMON__END_ACTION;
-ChannelsSpec: CHANNELS list=IdList? COMMON__END_ACTION;
+TokensSpec: TOKENS list=IdList? NORMAL__ACTION__END_ACTION;
+ChannelsSpec: CHANNELS list=IdList? NORMAL__ACTION__END_ACTION;
 IdList: ids+=[ModeSpec:UPPER_CASE_ID] (COMMA ids+=[ModeSpec:UPPER_CASE_ID])* COMMA?;
 
 // Match stuff like @parser::members {int i;}
-Action_: AT (scopeName=ActionScopeName COLONCOLON)? name=UPPER_CASE_ID block=ActionBlock;
+Action_: AT (scopeName=ActionScopeName COLONCOLON)? name=LOWER_CASE_ID block=ActionBlock;
 
 // Scope names could collide with keywords; allow them as ids for action scopes
 ActionScopeName: name=UPPER_CASE_ID | lexer?=LEXER | parser?=PARSER;
-ActionBlock: COMMON__BEGIN_ACTION contents+=ActionContent* COMMON__END_ACTION;
+ActionBlock: NORMAL__ACTION__BEGIN_ACTION contents+=ActionContent* NORMAL__ACTION__END_ACTION;
 ActionContent:
    COMMON__ESCAPE
    | COMMON__DSTRING_LITERAL
@@ -45,12 +45,12 @@ ActionContent:
    | ActionBlock
    ;
 
-CharSet: COMMON__BEGIN_ARGUMENT content=CharSetContent* COMMON__END_ARGUMENT;
+CharSet: NORMAL__ARGUMENT__BEGIN_ARGUMENT content=CharSetContent* NORMAL__ARGUMENT__END_ARGUMENT;
 CharSetContent returns string
    : ARGUMENT__LEXER_CHAR_SET_BODY
    | COMMON__ESCAPE
    ;
-ArgActionBlock: COMMON__BEGIN_ARGUMENT contents+=ArgumentContent* COMMON__END_ARGUMENT;
+ArgActionBlock: NORMAL__ARGUMENT__BEGIN_ARGUMENT contents+=ArgumentContent* NORMAL__ARGUMENT__END_ARGUMENT;
 ArgumentContent:
     COMMON__ESCAPE
     | COMMON__DSTRING_LITERAL
@@ -184,7 +184,7 @@ CharacterRange: left=COMMON__STRING_LITERAL RANGE right=COMMON__STRING_LITERAL;
 // Terminals may be adorned with certain options when
 // reference in the grammar: TOK<,,,>
 ElementOptions: LT element+=ElementOption (COMMA element+=ElementOption)* GT;
-ElementOption: ref=IdentifierRef (ASSIGN value=(IdentifierRef | COMMON__STRING_LITERAL))?;
+ElementOption: ref=LOWER_CASE_ID (ASSIGN value=(LOWER_CASE_ID | COMMON__STRING_LITERAL))?;
 IdentifierRef
    : parserRuleRef=[ParserRuleSpec:LOWER_CASE_ID]
    | lexerRuleRef=[LexerRuleSpec:UPPER_CASE_ID]
@@ -232,11 +232,11 @@ terminal UNTERMINATED_STRING_LITERAL: USQuoteLiteral;
 // Certain argument lists, such as those specifying call parameters
 // to a rule invocation, or input parameters to a rule specification
 // are contained within square brackets.
-terminal COMMON__BEGIN_ARGUMENT: LBrack;  // -> pushMode (ARGUMENT)
+terminal NORMAL__ARGUMENT__BEGIN_ARGUMENT: LBrack;  // -> pushMode (ARGUMENT)
 
 // -------------------------
 // Target Language Actions
-terminal COMMON__BEGIN_ACTION: LBrace; // -> pushMode (TargetLanguageAction);
+terminal NORMAL__ACTION__BEGIN_ACTION: LBrace; // -> pushMode (TargetLanguageAction);
 
 // -------------------------
 // Keywords
@@ -272,8 +272,8 @@ terminal COMMA: Comma;
 terminal SEMI: Semi;
 terminal LPAREN: LParen;
 terminal RPAREN: RParen;
-terminal COMMON__END_ACTION: RBrace;
-terminal COMMON__END_ARGUMENT: RBrack;
+terminal NORMAL__ACTION__END_ACTION: RBrace;
+terminal NORMAL__ARGUMENT__END_ARGUMENT: RBrack;
 terminal RARROW: RArrow;
 terminal LT: Lt;
 terminal GT: Gt;

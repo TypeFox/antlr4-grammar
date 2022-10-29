@@ -1,6 +1,6 @@
 import { ScopeProvider, AstReflection, NameProvider, AstNodeDescriptionProvider, IndexManager, LangiumServices, ReferenceInfo, Scope, Stream, AstNodeDescription, getDocument, AstNode, stream, ScopeOptions, StreamScope, interruptAndCheck, LangiumDocument, MultiMap, PrecomputedScopes, ScopeComputation, streamAst, getContainerOfType } from "langium";
 import { CancellationToken } from "vscode-languageserver";
-import { GrammarSpec, isGrammarSpec, isLexerRuleSpec, isParserRuleSpec, isRules } from "./generated/ast";
+import { GrammarSpec, isGrammarSpec, isLexerRuleSpec, isModeSpec, isParserRuleSpec, isRules } from "./generated/ast";
 
 export class Antlr4ScopeProvider implements ScopeProvider {
     protected readonly reflection: AstReflection;
@@ -83,12 +83,17 @@ export class Antlr4ScopeComputation implements ScopeComputation {
 
     async computeExports(document: LangiumDocument, cancelToken = CancellationToken.None): Promise<AstNodeDescription[]> {
         const exports: AstNodeDescription[] = [];
-        streamAst(document.parseResult.value)
-          .filter(isRules)
-          .flatMap(r => r.rules)
-          .forEach(rs => this.exportNode(rs, [
-            this.descriptions.createDescription(rs.rule, rs.rule.name, document)
-          ], document))
+        for (const node of streamAst(document.parseResult.value)) {
+            if(isRules(node)) {
+                for (const rule of node.rules) {
+                    this.exportNode(rule, exports, document);
+                }
+            } else if(isModeSpec(node)) {
+                for (const rule of node.rules) {
+                    this.exportNode(rule, exports, document);
+                }
+            }
+        }
         return exports;
     }
     protected exportNode(node: AstNode, exports: AstNodeDescription[], document: LangiumDocument): void {
@@ -108,7 +113,11 @@ export class Antlr4ScopeComputation implements ScopeComputation {
             if(isRules(node)) {
                 for (const rule of node.rules) {
                     const description = this.descriptions.createDescription(rule, rule.rule.name, rule.$document);
-                    console.log({uri:description.documentUri.toString(),  path: description.path, name: description.name})
+                    scopes.add(node, description);
+                }
+            } else if(isModeSpec(node)) {
+                for (const rule of node.rules) {
+                    const description = this.descriptions.createDescription(rule, rule.name, rule.$document);
                     scopes.add(node, description);
                 }
             }
