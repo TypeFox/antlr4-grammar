@@ -31,7 +31,13 @@ export function isBlockSuffix(item: unknown): item is BlockSuffix {
     return reflection.isInstance(item, BlockSuffix);
 }
 
-export type CharSetContent = string;
+export type CharSetContent = CharSet;
+
+export const CharSetContent = 'CharSetContent';
+
+export function isCharSetContent(item: unknown): item is CharSetContent {
+    return reflection.isInstance(item, CharSetContent);
+}
 
 export type LexerRuleBlock = LexerAltList;
 
@@ -174,7 +180,7 @@ export function isCharacterRange(item: unknown): item is CharacterRange {
 }
 
 export interface CharSet extends AstNode {
-    readonly $container: LexerAtom | SetElement;
+    readonly $container: CharSet | LexerAtom | SetElement;
     content?: CharSetContent
 }
 
@@ -788,12 +794,12 @@ export function isTokensSpec(item: unknown): item is TokensSpec {
     return reflection.isInstance(item, TokensSpec);
 }
 
-export type Antlr4AstType = 'ActionBlock' | 'ActionContent' | 'ActionScopeName' | 'Action_' | 'AltList' | 'Alternative' | 'ArgActionBlock' | 'ArgumentContent' | 'Atom' | 'Block' | 'BlockSet' | 'BlockSuffix' | 'ChannelsSpec' | 'CharSet' | 'CharacterRange' | 'DelegateGrammar' | 'DelegateGrammars' | 'Ebnf' | 'EbnfSuffix' | 'Element' | 'ElementOption' | 'ElementOptions' | 'ExceptionGroup' | 'ExceptionHandler' | 'FinallyClause' | 'GrammarDecl' | 'GrammarSpec' | 'GrammarType' | 'IdList' | 'IdentifierRef' | 'LabeledAlt' | 'LabeledElement' | 'LabeledLexerElement' | 'LexerAlt' | 'LexerAltList' | 'LexerAtom' | 'LexerBlock' | 'LexerCommand' | 'LexerCommandExpr' | 'LexerCommandName' | 'LexerCommands' | 'LexerElement' | 'LexerRuleBlock' | 'LexerRuleSpec' | 'LocalsSpec' | 'ModeSpec' | 'NotSet' | 'Option' | 'OptionValue' | 'OptionsSpec' | 'ParserRuleSpec' | 'PrequelConstruct' | 'RuleAction' | 'RuleAltList' | 'RuleBlock' | 'RuleModifier' | 'RuleModifiers' | 'RulePrequel' | 'RuleRef' | 'RuleReturns' | 'RuleSpec' | 'Rules' | 'SetElement' | 'ThrowsSpec' | 'TokensSpec';
+export type Antlr4AstType = 'ActionBlock' | 'ActionContent' | 'ActionScopeName' | 'Action_' | 'AltList' | 'Alternative' | 'ArgActionBlock' | 'ArgumentContent' | 'Atom' | 'Block' | 'BlockSet' | 'BlockSuffix' | 'ChannelsSpec' | 'CharSet' | 'CharSetContent' | 'CharacterRange' | 'DelegateGrammar' | 'DelegateGrammars' | 'Ebnf' | 'EbnfSuffix' | 'Element' | 'ElementOption' | 'ElementOptions' | 'ExceptionGroup' | 'ExceptionHandler' | 'FinallyClause' | 'GrammarDecl' | 'GrammarSpec' | 'GrammarType' | 'IdList' | 'IdentifierRef' | 'LabeledAlt' | 'LabeledElement' | 'LabeledLexerElement' | 'LexerAlt' | 'LexerAltList' | 'LexerAtom' | 'LexerBlock' | 'LexerCommand' | 'LexerCommandExpr' | 'LexerCommandName' | 'LexerCommands' | 'LexerElement' | 'LexerRuleBlock' | 'LexerRuleSpec' | 'LocalsSpec' | 'ModeSpec' | 'NotSet' | 'Option' | 'OptionValue' | 'OptionsSpec' | 'ParserRuleSpec' | 'PrequelConstruct' | 'RuleAction' | 'RuleAltList' | 'RuleBlock' | 'RuleModifier' | 'RuleModifiers' | 'RulePrequel' | 'RuleRef' | 'RuleReturns' | 'RuleSpec' | 'Rules' | 'SetElement' | 'ThrowsSpec' | 'TokensSpec';
 
 export class Antlr4AstReflection implements AstReflection {
 
     getAllTypes(): string[] {
-        return ['ActionBlock', 'ActionContent', 'ActionScopeName', 'Action_', 'AltList', 'Alternative', 'ArgActionBlock', 'ArgumentContent', 'Atom', 'Block', 'BlockSet', 'BlockSuffix', 'ChannelsSpec', 'CharSet', 'CharacterRange', 'DelegateGrammar', 'DelegateGrammars', 'Ebnf', 'EbnfSuffix', 'Element', 'ElementOption', 'ElementOptions', 'ExceptionGroup', 'ExceptionHandler', 'FinallyClause', 'GrammarDecl', 'GrammarSpec', 'GrammarType', 'IdList', 'IdentifierRef', 'LabeledAlt', 'LabeledElement', 'LabeledLexerElement', 'LexerAlt', 'LexerAltList', 'LexerAtom', 'LexerBlock', 'LexerCommand', 'LexerCommandExpr', 'LexerCommandName', 'LexerCommands', 'LexerElement', 'LexerRuleBlock', 'LexerRuleSpec', 'LocalsSpec', 'ModeSpec', 'NotSet', 'Option', 'OptionValue', 'OptionsSpec', 'ParserRuleSpec', 'PrequelConstruct', 'RuleAction', 'RuleAltList', 'RuleBlock', 'RuleModifier', 'RuleModifiers', 'RulePrequel', 'RuleRef', 'RuleReturns', 'RuleSpec', 'Rules', 'SetElement', 'ThrowsSpec', 'TokensSpec'];
+        return ['ActionBlock', 'ActionContent', 'ActionScopeName', 'Action_', 'AltList', 'Alternative', 'ArgActionBlock', 'ArgumentContent', 'Atom', 'Block', 'BlockSet', 'BlockSuffix', 'ChannelsSpec', 'CharSet', 'CharSetContent', 'CharacterRange', 'DelegateGrammar', 'DelegateGrammars', 'Ebnf', 'EbnfSuffix', 'Element', 'ElementOption', 'ElementOptions', 'ExceptionGroup', 'ExceptionHandler', 'FinallyClause', 'GrammarDecl', 'GrammarSpec', 'GrammarType', 'IdList', 'IdentifierRef', 'LabeledAlt', 'LabeledElement', 'LabeledLexerElement', 'LexerAlt', 'LexerAltList', 'LexerAtom', 'LexerBlock', 'LexerCommand', 'LexerCommandExpr', 'LexerCommandName', 'LexerCommands', 'LexerElement', 'LexerRuleBlock', 'LexerRuleSpec', 'LocalsSpec', 'ModeSpec', 'NotSet', 'Option', 'OptionValue', 'OptionsSpec', 'ParserRuleSpec', 'PrequelConstruct', 'RuleAction', 'RuleAltList', 'RuleBlock', 'RuleModifier', 'RuleModifiers', 'RulePrequel', 'RuleRef', 'RuleReturns', 'RuleSpec', 'Rules', 'SetElement', 'ThrowsSpec', 'TokensSpec'];
     }
 
     isInstance(node: unknown, type: string): boolean {
@@ -810,6 +816,9 @@ export class Antlr4AstReflection implements AstReflection {
             }
             case ArgActionBlock: {
                 return this.isSubtype(ArgumentContent, supertype);
+            }
+            case CharSet: {
+                return this.isSubtype(CharSetContent, supertype);
             }
             case EbnfSuffix: {
                 return this.isSubtype(BlockSuffix, supertype);

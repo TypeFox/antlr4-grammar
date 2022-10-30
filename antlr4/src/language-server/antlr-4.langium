@@ -46,9 +46,10 @@ ActionContent:
    ;
 
 CharSet: NORMAL__ARGUMENT__BEGIN_ARGUMENT content=CharSetContent* NORMAL__ARGUMENT__END_ARGUMENT;
-CharSetContent returns string
+CharSetContent
    : ARGUMENT__LEXER_CHAR_SET_BODY
    | COMMON__ESCAPE
+   | CharSet
    ;
 ArgActionBlock: NORMAL__ARGUMENT__BEGIN_ARGUMENT contents+=ArgumentContent* NORMAL__ARGUMENT__END_ARGUMENT;
 ArgumentContent:
@@ -315,7 +316,7 @@ hidden terminal COMMON__WS: Ws+;
 // -------------------------
 
 terminal ARGUMENT__LEXER_CHAR_SET_BODY
-   : /[^ \]\\]/ | EscAny 
+   : (/[^ \]\\]/ | EscAny)+
    ;
 
 terminal COMMON__ESCAPE

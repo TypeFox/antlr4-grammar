@@ -1047,7 +1047,6 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     {
       "$type": "ParserRule",
       "name": "CharSetContent",
-      "dataType": "string",
       "definition": {
         "$type": "Alternatives",
         "elements": [
@@ -1062,6 +1061,13 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "$type": "RuleCall",
             "rule": {
               "$refText": "COMMON__ESCAPE"
+            },
+            "arguments": []
+          },
+          {
+            "$type": "RuleCall",
+            "rule": {
+              "$refText": "CharSet"
             },
             "arguments": []
           }
@@ -4618,7 +4624,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
               "$refText": "EscAny"
             }
           }
-        ]
+        ],
+        "cardinality": "+"
       },
       "fragment": false,
       "hidden": false
