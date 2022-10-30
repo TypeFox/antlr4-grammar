@@ -350,7 +350,7 @@ export function isGrammarType(item: unknown): item is GrammarType {
 }
 
 export interface IdentifierRef extends AstNode {
-    readonly $container: LabeledElement | RuleRef;
+    readonly $container: RuleRef;
     lexerRuleRef?: Reference<LexerRuleSpec>
     parserRuleRef?: Reference<ParserRuleSpec>
 }
@@ -387,7 +387,7 @@ export function isLabeledAlt(item: unknown): item is LabeledAlt {
 export interface LabeledElement extends AstNode {
     readonly $container: Element;
     element: Atom | Block
-    name: IdentifierRef
+    name: string
     op: string
 }
 

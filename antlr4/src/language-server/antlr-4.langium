@@ -126,7 +126,7 @@ Element
    | block=ActionBlock question?=QUESTION?
    ;
 
-LabeledElement: name=IdentifierRef op=(ASSIGN | PLUS_ASSIGN) element=(Atom | Block);
+LabeledElement: name=LOWER_CASE_ID op=(ASSIGN | PLUS_ASSIGN) element=(Atom | Block);
 
 // --------------------
 // EBNF and blocks
