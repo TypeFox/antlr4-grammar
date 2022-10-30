@@ -23,7 +23,6 @@ export class Antlr4Validator {
 
     checkDuplicatedRules(grammar: GrammarSpec, accept: ValidationAcceptor): void {
         const groups: Record<string, RuleSpec[]> = {};
-        console.log(JSON.stringify(grammar.rules.rules.map(r=>r.rule.name)))
         grammar.rules.rules.forEach(r => {
             groups[r.rule.name] ??= [];
             groups[r.rule.name].push(r);

@@ -245,24 +245,24 @@ terminal NORMAL__ACTION__BEGIN_ACTION: LBrace; // -> pushMode (TargetLanguageAct
 // but only when followed by '{', and considered as a single token.
 // Otherwise, the symbols are tokenized as RULE_REF and allowed as
 // an Identifier in a labeledElement.
-terminal OPTIONS      : 'options'  WSNLCHARS* '{'  ;
-terminal TOKENS       : 'tokens'   WSNLCHARS* '{'  ;
-terminal CHANNELS     : 'channels' WSNLCHARS* '{'  ;
+terminal OPTIONS      : /options\b/  WSNLCHARS* '{'  ;
+terminal TOKENS       : /tokens\b/   WSNLCHARS* '{'  ;
+terminal CHANNELS     : /channels\b/ WSNLCHARS* '{'  ;
 terminal fragment WSNLCHARS : / / | '\t' | '\f' | '\n' | '\r' ;
-terminal IMPORT: 'import';
-terminal FRAGMENT: 'fragment';
-terminal LEXER: 'lexer';
-terminal PARSER: 'parser';
-terminal GRAMMAR: 'grammar';
-terminal PROTECTED: 'protected';
-terminal PUBLIC: 'public';
-terminal PRIVATE: 'private';
-terminal RETURNS: 'returns';
-terminal LOCALS: 'locals';
-terminal THROWS: 'throws';
-terminal CATCH: 'catch';
-terminal FINALLY: 'finally';
-terminal MODE: 'mode';
+terminal IMPORT: /import\b/;
+terminal FRAGMENT: /fragment\b/;
+terminal LEXER: /lexer\b/;
+terminal PARSER: /parser\b/;
+terminal GRAMMAR: /grammar\b/;
+terminal PROTECTED: /protected\b/;
+terminal PUBLIC: /public\b/;
+terminal PRIVATE: /private\b/;
+terminal RETURNS: /returns\b/;
+terminal LOCALS: /locals\b/;
+terminal THROWS: /throws\b/;
+terminal CATCH: /catch\b/;
+terminal FINALLY: /finally\b/;
+terminal MODE: /mode\b/;
 
 // -------------------------
 // Punctuation
@@ -416,7 +416,7 @@ terminal fragment UpperNameStartChar
 
 // -----------------------------------
 // Types
-terminal fragment Int: 'int';
+terminal fragment Int: /int\b/;
 
 // -----------------------------------
 // Symbols

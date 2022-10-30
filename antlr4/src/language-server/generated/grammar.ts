@@ -4011,11 +4011,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
         "$type": "TerminalGroup",
         "elements": [
           {
-            "$type": "CharacterRange",
-            "left": {
-              "$type": "Keyword",
-              "value": "options"
-            }
+            "$type": "RegexToken",
+            "regex": "options\\\\b"
           },
           {
             "$type": "TerminalRuleCall",
@@ -4043,11 +4040,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
         "$type": "TerminalGroup",
         "elements": [
           {
-            "$type": "CharacterRange",
-            "left": {
-              "$type": "Keyword",
-              "value": "tokens"
-            }
+            "$type": "RegexToken",
+            "regex": "tokens\\\\b"
           },
           {
             "$type": "TerminalRuleCall",
@@ -4075,11 +4069,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
         "$type": "TerminalGroup",
         "elements": [
           {
-            "$type": "CharacterRange",
-            "left": {
-              "$type": "Keyword",
-              "value": "channels"
-            }
+            "$type": "RegexToken",
+            "regex": "channels\\\\b"
           },
           {
             "$type": "TerminalRuleCall",
@@ -4163,7 +4154,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "name": "IMPORT",
       "definition": {
         "$type": "RegexToken",
-        "regex": "import"
+        "regex": "import\\\\b"
       },
       "fragment": false,
       "hidden": false
@@ -4172,11 +4163,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "$type": "TerminalRule",
       "name": "FRAGMENT",
       "definition": {
-        "$type": "CharacterRange",
-        "left": {
-          "$type": "Keyword",
-          "value": "fragment"
-        }
+        "$type": "RegexToken",
+        "regex": "fragment\\\\b"
       },
       "fragment": false,
       "hidden": false
@@ -4185,11 +4173,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "$type": "TerminalRule",
       "name": "LEXER",
       "definition": {
-        "$type": "CharacterRange",
-        "left": {
-          "$type": "Keyword",
-          "value": "lexer"
-        }
+        "$type": "RegexToken",
+        "regex": "lexer\\\\b"
       },
       "fragment": false,
       "hidden": false
@@ -4198,11 +4183,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "$type": "TerminalRule",
       "name": "PARSER",
       "definition": {
-        "$type": "CharacterRange",
-        "left": {
-          "$type": "Keyword",
-          "value": "parser"
-        }
+        "$type": "RegexToken",
+        "regex": "parser\\\\b"
       },
       "fragment": false,
       "hidden": false
@@ -4211,11 +4193,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "$type": "TerminalRule",
       "name": "GRAMMAR",
       "definition": {
-        "$type": "CharacterRange",
-        "left": {
-          "$type": "Keyword",
-          "value": "grammar"
-        }
+        "$type": "RegexToken",
+        "regex": "grammar\\\\b"
       },
       "fragment": false,
       "hidden": false
@@ -4224,11 +4203,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "$type": "TerminalRule",
       "name": "PROTECTED",
       "definition": {
-        "$type": "CharacterRange",
-        "left": {
-          "$type": "Keyword",
-          "value": "protected"
-        }
+        "$type": "RegexToken",
+        "regex": "protected\\\\b"
       },
       "fragment": false,
       "hidden": false
@@ -4237,11 +4213,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "$type": "TerminalRule",
       "name": "PUBLIC",
       "definition": {
-        "$type": "CharacterRange",
-        "left": {
-          "$type": "Keyword",
-          "value": "public"
-        }
+        "$type": "RegexToken",
+        "regex": "public\\\\b"
       },
       "fragment": false,
       "hidden": false
@@ -4250,11 +4223,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "$type": "TerminalRule",
       "name": "PRIVATE",
       "definition": {
-        "$type": "CharacterRange",
-        "left": {
-          "$type": "Keyword",
-          "value": "private"
-        }
+        "$type": "RegexToken",
+        "regex": "private\\\\b"
       },
       "fragment": false,
       "hidden": false
@@ -4263,11 +4233,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "$type": "TerminalRule",
       "name": "RETURNS",
       "definition": {
-        "$type": "CharacterRange",
-        "left": {
-          "$type": "Keyword",
-          "value": "returns"
-        }
+        "$type": "RegexToken",
+        "regex": "returns\\\\b"
       },
       "fragment": false,
       "hidden": false
@@ -4276,11 +4243,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "$type": "TerminalRule",
       "name": "LOCALS",
       "definition": {
-        "$type": "CharacterRange",
-        "left": {
-          "$type": "Keyword",
-          "value": "locals"
-        }
+        "$type": "RegexToken",
+        "regex": "locals\\\\b"
       },
       "fragment": false,
       "hidden": false
@@ -4289,11 +4253,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "$type": "TerminalRule",
       "name": "THROWS",
       "definition": {
-        "$type": "CharacterRange",
-        "left": {
-          "$type": "Keyword",
-          "value": "throws"
-        }
+        "$type": "RegexToken",
+        "regex": "throws\\\\b"
       },
       "fragment": false,
       "hidden": false
@@ -4302,11 +4263,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "$type": "TerminalRule",
       "name": "CATCH",
       "definition": {
-        "$type": "CharacterRange",
-        "left": {
-          "$type": "Keyword",
-          "value": "catch"
-        }
+        "$type": "RegexToken",
+        "regex": "catch\\\\b"
       },
       "fragment": false,
       "hidden": false
@@ -4315,11 +4273,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "$type": "TerminalRule",
       "name": "FINALLY",
       "definition": {
-        "$type": "CharacterRange",
-        "left": {
-          "$type": "Keyword",
-          "value": "finally"
-        }
+        "$type": "RegexToken",
+        "regex": "finally\\\\b"
       },
       "fragment": false,
       "hidden": false
@@ -4328,11 +4283,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "$type": "TerminalRule",
       "name": "MODE",
       "definition": {
-        "$type": "CharacterRange",
-        "left": {
-          "$type": "Keyword",
-          "value": "mode"
-        }
+        "$type": "RegexToken",
+        "regex": "mode\\\\b"
       },
       "fragment": false,
       "hidden": false
@@ -5216,11 +5168,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "fragment": true,
       "name": "Int",
       "definition": {
-        "$type": "CharacterRange",
-        "left": {
-          "$type": "Keyword",
-          "value": "int"
-        }
+        "$type": "RegexToken",
+        "regex": "int\\\\b"
       },
       "hidden": false
     },
