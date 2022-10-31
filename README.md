@@ -13,3 +13,14 @@ This repository uses Git submodules. So do your `git clone` with the flag `--rec
 ```
 git clone https://github.com/langium/antlr4-grammar --recurse-submodules
 ```
+
+## How to transpile ANTLR4 to Langium
+
+During the migration of the ANTLR4 grammar for ANTLR4 itself, I will write down which steps were needed.
+
+- migrate each ANTLR4 lexer rule of the pattern ˋRule: 'constant';ˋ by ...
+
+TokenBuilder:
+- migrate each mode ˋMMMˋ by ...
+- migrate each ˋpushMode(MMM)ˋ by ...
+- migrate each ˋpopMode(MMM)ˋ by ...
