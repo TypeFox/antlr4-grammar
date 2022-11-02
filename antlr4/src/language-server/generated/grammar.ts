@@ -96,26 +96,14 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           },
           {
             "$type": "Assignment",
-            "feature": "name",
+            "feature": "id",
             "operator": "=",
             "terminal": {
-              "$type": "Alternatives",
-              "elements": [
-                {
-                  "$type": "RuleCall",
-                  "rule": {
-                    "$refText": "UPPER_CASE_ID"
-                  },
-                  "arguments": []
-                },
-                {
-                  "$type": "RuleCall",
-                  "rule": {
-                    "$refText": "LOWER_CASE_ID"
-                  },
-                  "arguments": []
-                }
-              ]
+              "$type": "RuleCall",
+              "rule": {
+                "$refText": "GrammarId"
+              },
+              "arguments": []
             }
           },
           {
@@ -398,23 +386,11 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
                 "feature": "ids",
                 "operator": "+=",
                 "terminal": {
-                  "$type": "Alternatives",
-                  "elements": [
-                    {
-                      "$type": "RuleCall",
-                      "rule": {
-                        "$refText": "UPPER_CASE_ID"
-                      },
-                      "arguments": []
-                    },
-                    {
-                      "$type": "RuleCall",
-                      "rule": {
-                        "$refText": "LOWER_CASE_ID"
-                      },
-                      "arguments": []
-                    }
-                  ]
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$refText": "Id"
+                  },
+                  "arguments": []
                 }
               },
               {
@@ -432,23 +408,11 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
                     "feature": "ids",
                     "operator": "+=",
                     "terminal": {
-                      "$type": "Alternatives",
-                      "elements": [
-                        {
-                          "$type": "RuleCall",
-                          "rule": {
-                            "$refText": "UPPER_CASE_ID"
-                          },
-                          "arguments": []
-                        },
-                        {
-                          "$type": "RuleCall",
-                          "rule": {
-                            "$refText": "LOWER_CASE_ID"
-                          },
-                          "arguments": []
-                        }
-                      ]
+                      "$type": "RuleCall",
+                      "rule": {
+                        "$refText": "Id"
+                      },
+                      "arguments": []
                     }
                   }
                 ],
@@ -597,12 +561,12 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
               },
               {
                 "$type": "Assignment",
-                "feature": "name",
+                "feature": "id",
                 "operator": "=",
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$refText": "UPPER_CASE_ID"
+                    "$refText": "GrammarId"
                   },
                   "arguments": []
                 }
@@ -611,12 +575,12 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           },
           {
             "$type": "Assignment",
-            "feature": "name",
+            "feature": "id",
             "operator": "=",
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "UPPER_CASE_ID"
+                "$refText": "GrammarId"
               },
               "arguments": []
             }
@@ -650,7 +614,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "IdList"
+                "$refText": "TokenIdList"
               },
               "arguments": []
             },
@@ -692,7 +656,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "IdList"
+                "$refText": "ChannelIdList"
               },
               "arguments": []
             },
@@ -716,7 +680,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     },
     {
       "$type": "ParserRule",
-      "name": "IdList",
+      "name": "TokenIdList",
       "definition": {
         "$type": "Group",
         "elements": [
@@ -725,18 +689,11 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "feature": "ids",
             "operator": "+=",
             "terminal": {
-              "$type": "CrossReference",
-              "type": {
-                "$refText": "ModeSpec"
+              "$type": "RuleCall",
+              "rule": {
+                "$refText": "TokenId"
               },
-              "terminal": {
-                "$type": "RuleCall",
-                "rule": {
-                  "$refText": "UPPER_CASE_ID"
-                },
-                "arguments": []
-              },
-              "deprecatedSyntax": false
+              "arguments": []
             }
           },
           {
@@ -754,18 +711,71 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
                 "feature": "ids",
                 "operator": "+=",
                 "terminal": {
-                  "$type": "CrossReference",
-                  "type": {
-                    "$refText": "ModeSpec"
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$refText": "TokenId"
                   },
-                  "terminal": {
-                    "$type": "RuleCall",
-                    "rule": {
-                      "$refText": "UPPER_CASE_ID"
-                    },
-                    "arguments": []
+                  "arguments": []
+                }
+              }
+            ],
+            "cardinality": "*"
+          },
+          {
+            "$type": "RuleCall",
+            "rule": {
+              "$refText": "COMMA"
+            },
+            "arguments": [],
+            "cardinality": "?"
+          }
+        ]
+      },
+      "definesHiddenTokens": false,
+      "entry": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
+    },
+    {
+      "$type": "ParserRule",
+      "name": "ChannelIdList",
+      "definition": {
+        "$type": "Group",
+        "elements": [
+          {
+            "$type": "Assignment",
+            "feature": "ids",
+            "operator": "+=",
+            "terminal": {
+              "$type": "RuleCall",
+              "rule": {
+                "$refText": "ChannelId"
+              },
+              "arguments": []
+            }
+          },
+          {
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "RuleCall",
+                "rule": {
+                  "$refText": "COMMA"
+                },
+                "arguments": []
+              },
+              {
+                "$type": "Assignment",
+                "feature": "ids",
+                "operator": "+=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$refText": "ChannelId"
                   },
-                  "deprecatedSyntax": false
+                  "arguments": []
                 }
               }
             ],
@@ -1187,12 +1197,12 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           },
           {
             "$type": "Assignment",
-            "feature": "name",
+            "feature": "id",
             "operator": "=",
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "UPPER_CASE_ID"
+                "$refText": "ModeId"
               },
               "arguments": []
             }
@@ -2587,7 +2597,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "UPPER_CASE_ID"
+                "$refText": "ModeId"
               },
               "arguments": []
             },
@@ -3633,7 +3643,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "IdentifierRef"
+                "$refText": "RuleIdRef"
               },
               "arguments": []
             }
@@ -3851,7 +3861,165 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     },
     {
       "$type": "ParserRule",
-      "name": "IdentifierRef",
+      "name": "Id",
+      "definition": {
+        "$type": "Assignment",
+        "feature": "name",
+        "operator": "=",
+        "terminal": {
+          "$type": "Alternatives",
+          "elements": [
+            {
+              "$type": "RuleCall",
+              "rule": {
+                "$refText": "LOWER_CASE_ID"
+              },
+              "arguments": []
+            },
+            {
+              "$type": "RuleCall",
+              "rule": {
+                "$refText": "UPPER_CASE_ID"
+              },
+              "arguments": []
+            }
+          ]
+        }
+      },
+      "definesHiddenTokens": false,
+      "entry": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
+    },
+    {
+      "$type": "ParserRule",
+      "name": "GrammarId",
+      "definition": {
+        "$type": "Assignment",
+        "feature": "name",
+        "operator": "=",
+        "terminal": {
+          "$type": "Alternatives",
+          "elements": [
+            {
+              "$type": "RuleCall",
+              "rule": {
+                "$refText": "LOWER_CASE_ID"
+              },
+              "arguments": []
+            },
+            {
+              "$type": "RuleCall",
+              "rule": {
+                "$refText": "UPPER_CASE_ID"
+              },
+              "arguments": []
+            }
+          ]
+        }
+      },
+      "definesHiddenTokens": false,
+      "entry": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
+    },
+    {
+      "$type": "ParserRule",
+      "name": "ChannelId",
+      "definition": {
+        "$type": "Assignment",
+        "feature": "name",
+        "operator": "=",
+        "terminal": {
+          "$type": "Alternatives",
+          "elements": [
+            {
+              "$type": "RuleCall",
+              "rule": {
+                "$refText": "LOWER_CASE_ID"
+              },
+              "arguments": []
+            },
+            {
+              "$type": "RuleCall",
+              "rule": {
+                "$refText": "UPPER_CASE_ID"
+              },
+              "arguments": []
+            }
+          ]
+        }
+      },
+      "definesHiddenTokens": false,
+      "entry": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
+    },
+    {
+      "$type": "ParserRule",
+      "name": "ModeId",
+      "definition": {
+        "$type": "Assignment",
+        "feature": "name",
+        "operator": "=",
+        "terminal": {
+          "$type": "Alternatives",
+          "elements": [
+            {
+              "$type": "RuleCall",
+              "rule": {
+                "$refText": "LOWER_CASE_ID"
+              },
+              "arguments": []
+            },
+            {
+              "$type": "RuleCall",
+              "rule": {
+                "$refText": "UPPER_CASE_ID"
+              },
+              "arguments": []
+            }
+          ]
+        }
+      },
+      "definesHiddenTokens": false,
+      "entry": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
+    },
+    {
+      "$type": "ParserRule",
+      "name": "TokenId",
+      "definition": {
+        "$type": "Assignment",
+        "feature": "name",
+        "operator": "=",
+        "terminal": {
+          "$type": "RuleCall",
+          "rule": {
+            "$refText": "UPPER_CASE_ID"
+          },
+          "arguments": []
+        }
+      },
+      "definesHiddenTokens": false,
+      "entry": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
+    },
+    {
+      "$type": "ParserRule",
+      "name": "RuleIdRef",
       "definition": {
         "$type": "Alternatives",
         "elements": [
@@ -3881,7 +4049,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "CrossReference",
               "type": {
-                "$refText": "LexerRuleSpec"
+                "$refText": "TokenRef"
               },
               "terminal": {
                 "$type": "RuleCall",
@@ -5552,10 +5720,33 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "hidden": false
     }
   ],
+  "types": [
+    {
+      "$type": "Type",
+      "typeAlternatives": [
+        {
+          "$type": "AtomType",
+          "refType": {
+            "$refText": "TokenId"
+          },
+          "isArray": false,
+          "isRef": false
+        },
+        {
+          "$type": "AtomType",
+          "refType": {
+            "$refText": "LexerRuleSpec"
+          },
+          "isArray": false,
+          "isRef": false
+        }
+      ],
+      "name": "TokenRef"
+    }
+  ],
   "definesHiddenTokens": false,
   "hiddenTokens": [],
   "imports": [],
   "interfaces": [],
-  "types": [],
   "usedGrammars": []
 }`));

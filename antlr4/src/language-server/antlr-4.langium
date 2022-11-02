@@ -1,7 +1,7 @@
 grammar Antlr4
 
 entry GrammarSpec: grammarDecl=GrammarDecl prequels+=PrequelConstruct* rules=Rules specs+=ModeSpec*;
-GrammarDecl: type=GrammarType name=(UPPER_CASE_ID|LOWER_CASE_ID) SEMI;
+GrammarDecl: type=GrammarType id=GrammarId SEMI;
 GrammarType: (lexer?=LEXER GRAMMAR | parser?=PARSER GRAMMAR | mixed?=GRAMMAR);
 
 // This is the list of all constructs that can be declared before
@@ -14,7 +14,7 @@ PrequelConstruct: options=OptionsSpec | grammars=DelegateGrammars | tokens=Token
 OptionsSpec: OPTIONS (options+=Option SEMI)* NORMAL__ACTION__END_ACTION;
 Option: name=LOWER_CASE_ID ASSIGN value=OptionValue;
 OptionValue
-   : ids+=(UPPER_CASE_ID|LOWER_CASE_ID) (DOT ids+=(UPPER_CASE_ID|LOWER_CASE_ID))*
+   : ids+=Id (DOT ids+=Id)*
    | string=COMMON__STRING_LITERAL
    | action=ActionBlock
    | number=INT
@@ -23,13 +23,14 @@ OptionValue
 // ------------
 // Delegates
 DelegateGrammars: IMPORT grammars+=DelegateGrammar (COMMA grammars+=DelegateGrammar)* SEMI;
-DelegateGrammar: alias=UPPER_CASE_ID ASSIGN name=UPPER_CASE_ID | name=UPPER_CASE_ID;
+DelegateGrammar: alias=UPPER_CASE_ID ASSIGN id=GrammarId | id=GrammarId;
 
 // ------------
 // Tokens & Channels
-TokensSpec: TOKENS list=IdList? NORMAL__ACTION__END_ACTION;
-ChannelsSpec: CHANNELS list=IdList? NORMAL__ACTION__END_ACTION;
-IdList: ids+=[ModeSpec:UPPER_CASE_ID] (COMMA ids+=[ModeSpec:UPPER_CASE_ID])* COMMA?;
+TokensSpec: TOKENS list=TokenIdList? NORMAL__ACTION__END_ACTION;
+ChannelsSpec: CHANNELS list=ChannelIdList? NORMAL__ACTION__END_ACTION;
+TokenIdList: ids+=TokenId (COMMA ids+=TokenId)* COMMA?;
+ChannelIdList: ids+=ChannelId (COMMA ids+=ChannelId)* COMMA?;
 
 // Match stuff like @parser::members {int i;}
 Action_: AT (scopeName=ActionScopeName COLONCOLON)? name=LOWER_CASE_ID block=ActionBlock;
@@ -59,7 +60,7 @@ ArgumentContent:
     | COMMON__ANY
     | ArgActionBlock
     ;
-ModeSpec: MODE name=UPPER_CASE_ID SEMI rules+=LexerRuleSpec*;
+ModeSpec: MODE id=ModeId SEMI rules+=LexerRuleSpec*;
 Rules: rules+=RuleSpec*;
 RuleSpec: rule=(ParserRuleSpec | LexerRuleSpec);
 
@@ -112,7 +113,7 @@ LexerCommand: name=LexerCommandName LPAREN expr=LexerCommandExpr RPAREN
             | name=LexerCommandName
             ;
 LexerCommandName: name=(LOWER_CASE_ID | MODE);
-LexerCommandExpr: name=(UPPER_CASE_ID | INT);
+LexerCommandExpr: name=(ModeId | INT);
 
 // --------------------
 // Rule Alts
@@ -176,7 +177,7 @@ Block: LPAREN (options=OptionsSpec? actions+=RuleAction* COLON)? list=AltList RP
 
 // ----------------
 // Parser rule ref
-RuleRef: ruleRef=IdentifierRef actions=ArgActionBlock? options=ElementOptions?;
+RuleRef: ruleRef=RuleIdRef actions=ArgActionBlock? options=ElementOptions?;
 
 // ---------------
 // Character Range
@@ -186,9 +187,32 @@ CharacterRange: left=COMMON__STRING_LITERAL RANGE right=COMMON__STRING_LITERAL;
 // reference in the grammar: TOK<,,,>
 ElementOptions: LT element+=ElementOption (COMMA element+=ElementOption)* GT;
 ElementOption: ref=LOWER_CASE_ID (ASSIGN value=(LOWER_CASE_ID | COMMON__STRING_LITERAL))?;
-IdentifierRef
+
+Id
+   : name=(LOWER_CASE_ID|UPPER_CASE_ID)
+   ;
+
+GrammarId
+   : name=(LOWER_CASE_ID|UPPER_CASE_ID)
+   ;
+
+ChannelId
+   : name=(LOWER_CASE_ID|UPPER_CASE_ID)
+   ;
+
+ModeId
+   : name=(LOWER_CASE_ID|UPPER_CASE_ID)
+   ;
+
+TokenId
+   : name=UPPER_CASE_ID
+   ;
+
+type TokenRef = TokenId | LexerRuleSpec; 
+
+RuleIdRef
    : parserRuleRef=[ParserRuleSpec:LOWER_CASE_ID]
-   | lexerRuleRef=[LexerRuleSpec:UPPER_CASE_ID]
+   | lexerRuleRef=[TokenRef:UPPER_CASE_ID]
    ;
 
 

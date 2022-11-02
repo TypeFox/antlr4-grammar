@@ -21,7 +21,7 @@ import {
   Position,
   Range,
 } from "vscode-languageserver";
-import { EOF } from "./built-in";
+import { BuiltInDocument, EOF } from "./built-in";
 
 export type GrammarType = "lexer" | "parser" | "mixed";
 
@@ -74,16 +74,16 @@ export class Antlr4DocumentBuilder extends DefaultDocumentBuilder {
     >();
     const map = new Map<string, Grammar>();
     const edges: [Grammar, Grammar][] = [];
-    for (const document of documents) {
+    for (const document of documents.filter(d => d.parseResult.value !== BuiltInDocument)) {
       const spec = document.parseResult.value;
       const decl = document.parseResult.value.grammarDecl;
-      const name = decl.name;
+      const name = decl.id.name;
       const uri = document.uri;
       const rules = toMap(
         document.parseResult.value.rules.rules,
         (r) => r.rule.name
       );
-      const modes = toMap(document.parseResult.value.specs, (r) => r.name);
+      const modes = toMap(document.parseResult.value.specs, (r) => r.id.name);
       const type: GrammarType = decl.type.lexer
         ? "lexer"
         : decl.type.parser
@@ -92,7 +92,7 @@ export class Antlr4DocumentBuilder extends DefaultDocumentBuilder {
       const imports = document.parseResult.value.prequels
         .filter((p) => p.grammars)
         .flatMap((p) => p.grammars!.grammars)
-        .map((p) => ({ name: p.name, alias: p.alias, astNode: p as AstNode }));
+        .map((p) => ({ name: p.id.name, alias: p.alias, astNode: p as AstNode }));
       const optionGrammars = spec.prequels
         .flatMap((p) => p.options)
         .filter((os) => os != null)
@@ -100,7 +100,7 @@ export class Antlr4DocumentBuilder extends DefaultDocumentBuilder {
         .filter((o) => o.name === "tokenVocab");
       for (const node of optionGrammars) {
         imports.push({
-          name: node.value.ids[0],
+          name: node.value.ids[0].name,
           astNode: node,
           alias: undefined,
         });
