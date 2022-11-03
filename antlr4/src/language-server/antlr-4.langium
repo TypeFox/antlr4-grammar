@@ -1,7 +1,7 @@
 grammar Antlr4
 
 entry GrammarSpec: grammarDecl=GrammarDecl prequels+=PrequelConstruct* rules=Rules specs+=ModeSpec*;
-GrammarDecl: type=GrammarType name=UPPER_CASE_ID SEMI;
+GrammarDecl: type=GrammarType id=GrammarId SEMI;
 GrammarType: (lexer?=LEXER GRAMMAR | parser?=PARSER GRAMMAR | mixed?=GRAMMAR);
 
 // This is the list of all constructs that can be declared before
@@ -11,10 +11,10 @@ PrequelConstruct: options=OptionsSpec | grammars=DelegateGrammars | tokens=Token
 
 // ------------
 // Options - things that affect analysis and/or code generation
-OptionsSpec: OPTIONS (options+=Option SEMI)* COMMON__END_ACTION;
-Option: name=UPPER_CASE_ID ASSIGN value=OptionValue;
+OptionsSpec: OPTIONS (options+=Option SEMI)* NORMAL__ACTION__END_ACTION;
+Option: name=LOWER_CASE_ID ASSIGN value=OptionValue;
 OptionValue
-   : ids+=UPPER_CASE_ID (DOT ids+=UPPER_CASE_ID)*
+   : ids+=Id (DOT ids+=Id)*
    | string=COMMON__STRING_LITERAL
    | action=ActionBlock
    | number=INT
@@ -23,20 +23,21 @@ OptionValue
 // ------------
 // Delegates
 DelegateGrammars: IMPORT grammars+=DelegateGrammar (COMMA grammars+=DelegateGrammar)* SEMI;
-DelegateGrammar: alias=UPPER_CASE_ID ASSIGN name=UPPER_CASE_ID | name=UPPER_CASE_ID;
+DelegateGrammar: alias=UPPER_CASE_ID ASSIGN id=GrammarId | id=GrammarId;
 
 // ------------
 // Tokens & Channels
-TokensSpec: TOKENS list=IdList? COMMON__END_ACTION;
-ChannelsSpec: CHANNELS list=IdList? COMMON__END_ACTION;
-IdList: ids+=[ModeSpec:UPPER_CASE_ID] (COMMA ids+=[ModeSpec:UPPER_CASE_ID])* COMMA?;
+TokensSpec: TOKENS list=TokenIdList? NORMAL__ACTION__END_ACTION;
+ChannelsSpec: CHANNELS list=ChannelIdList? NORMAL__ACTION__END_ACTION;
+TokenIdList: ids+=TokenId (COMMA ids+=TokenId)* COMMA?;
+ChannelIdList: ids+=ChannelId (COMMA ids+=ChannelId)* COMMA?;
 
 // Match stuff like @parser::members {int i;}
-Action_: AT (scopeName=ActionScopeName COLONCOLON)? name=UPPER_CASE_ID block=ActionBlock;
+Action_: AT (scopeName=ActionScopeName COLONCOLON)? name=LOWER_CASE_ID block=ActionBlock;
 
 // Scope names could collide with keywords; allow them as ids for action scopes
 ActionScopeName: name=UPPER_CASE_ID | lexer?=LEXER | parser?=PARSER;
-ActionBlock: COMMON__BEGIN_ACTION contents+=ActionContent* COMMON__END_ACTION;
+ActionBlock: NORMAL__ACTION__BEGIN_ACTION contents+=ActionContent* NORMAL__ACTION__END_ACTION;
 ActionContent:
    COMMON__ESCAPE
    | COMMON__DSTRING_LITERAL
@@ -45,12 +46,13 @@ ActionContent:
    | ActionBlock
    ;
 
-CharSet: COMMON__BEGIN_ARGUMENT content=CharSetContent* COMMON__END_ARGUMENT;
-CharSetContent returns string
+CharSet: NORMAL__ARGUMENT__BEGIN_ARGUMENT content=CharSetContent* NORMAL__ARGUMENT__END_ARGUMENT;
+CharSetContent
    : ARGUMENT__LEXER_CHAR_SET_BODY
    | COMMON__ESCAPE
+   | CharSet
    ;
-ArgActionBlock: COMMON__BEGIN_ARGUMENT contents+=ArgumentContent* COMMON__END_ARGUMENT;
+ArgActionBlock: NORMAL__ARGUMENT__BEGIN_ARGUMENT contents+=ArgumentContent* NORMAL__ARGUMENT__END_ARGUMENT;
 ArgumentContent:
     COMMON__ESCAPE
     | COMMON__DSTRING_LITERAL
@@ -58,7 +60,7 @@ ArgumentContent:
     | COMMON__ANY
     | ArgActionBlock
     ;
-ModeSpec: MODE name=UPPER_CASE_ID SEMI rules+=LexerRuleSpec*;
+ModeSpec: MODE id=ModeId SEMI rules+=LexerRuleSpec*;
 Rules: rules+=RuleSpec*;
 RuleSpec: rule=(ParserRuleSpec | LexerRuleSpec);
 
@@ -111,7 +113,7 @@ LexerCommand: name=LexerCommandName LPAREN expr=LexerCommandExpr RPAREN
             | name=LexerCommandName
             ;
 LexerCommandName: name=(LOWER_CASE_ID | MODE);
-LexerCommandExpr: name=(UPPER_CASE_ID | INT);
+LexerCommandExpr: name=(ModeId | INT);
 
 // --------------------
 // Rule Alts
@@ -125,7 +127,7 @@ Element
    | block=ActionBlock question?=QUESTION?
    ;
 
-LabeledElement: name=IdentifierRef op=(ASSIGN | PLUS_ASSIGN) element=(Atom | Block);
+LabeledElement: name=LOWER_CASE_ID op=(ASSIGN | PLUS_ASSIGN) element=(Atom | Block);
 
 // --------------------
 // EBNF and blocks
@@ -175,7 +177,7 @@ Block: LPAREN (options=OptionsSpec? actions+=RuleAction* COLON)? list=AltList RP
 
 // ----------------
 // Parser rule ref
-RuleRef: ruleRef=IdentifierRef actions=ArgActionBlock? options=ElementOptions?;
+RuleRef: ruleRef=RuleIdRef actions=ArgActionBlock? options=ElementOptions?;
 
 // ---------------
 // Character Range
@@ -184,10 +186,33 @@ CharacterRange: left=COMMON__STRING_LITERAL RANGE right=COMMON__STRING_LITERAL;
 // Terminals may be adorned with certain options when
 // reference in the grammar: TOK<,,,>
 ElementOptions: LT element+=ElementOption (COMMA element+=ElementOption)* GT;
-ElementOption: ref=IdentifierRef (ASSIGN value=(IdentifierRef | COMMON__STRING_LITERAL))?;
-IdentifierRef
+ElementOption: ref=LOWER_CASE_ID (ASSIGN value=(LOWER_CASE_ID | COMMON__STRING_LITERAL))?;
+
+Id
+   : name=(LOWER_CASE_ID|UPPER_CASE_ID)
+   ;
+
+GrammarId
+   : name=(LOWER_CASE_ID|UPPER_CASE_ID)
+   ;
+
+ChannelId
+   : name=(LOWER_CASE_ID|UPPER_CASE_ID)
+   ;
+
+ModeId
+   : name=(LOWER_CASE_ID|UPPER_CASE_ID)
+   ;
+
+TokenId
+   : name=UPPER_CASE_ID
+   ;
+
+type TokenRef = TokenId | LexerRuleSpec; 
+
+RuleIdRef
    : parserRuleRef=[ParserRuleSpec:LOWER_CASE_ID]
-   | lexerRuleRef=[LexerRuleSpec:UPPER_CASE_ID]
+   | lexerRuleRef=[TokenRef:UPPER_CASE_ID]
    ;
 
 
@@ -232,11 +257,11 @@ terminal UNTERMINATED_STRING_LITERAL: USQuoteLiteral;
 // Certain argument lists, such as those specifying call parameters
 // to a rule invocation, or input parameters to a rule specification
 // are contained within square brackets.
-terminal COMMON__BEGIN_ARGUMENT: LBrack;  // -> pushMode (ARGUMENT)
+terminal NORMAL__ARGUMENT__BEGIN_ARGUMENT: LBrack;  // -> pushMode (ARGUMENT)
 
 // -------------------------
 // Target Language Actions
-terminal COMMON__BEGIN_ACTION: LBrace; // -> pushMode (TargetLanguageAction);
+terminal NORMAL__ACTION__BEGIN_ACTION: LBrace; // -> pushMode (TargetLanguageAction);
 
 // -------------------------
 // Keywords
@@ -245,24 +270,24 @@ terminal COMMON__BEGIN_ACTION: LBrace; // -> pushMode (TargetLanguageAction);
 // but only when followed by '{', and considered as a single token.
 // Otherwise, the symbols are tokenized as RULE_REF and allowed as
 // an Identifier in a labeledElement.
-terminal OPTIONS      : 'options'  WSNLCHARS* '{'  ;
-terminal TOKENS       : 'tokens'   WSNLCHARS* '{'  ;
-terminal CHANNELS     : 'channels' WSNLCHARS* '{'  ;
+terminal OPTIONS      : /options\b/  WSNLCHARS* '{'  ;
+terminal TOKENS       : /tokens\b/   WSNLCHARS* '{'  ;
+terminal CHANNELS     : /channels\b/ WSNLCHARS* '{'  ;
 terminal fragment WSNLCHARS : / / | '\t' | '\f' | '\n' | '\r' ;
-terminal IMPORT: 'import';
-terminal FRAGMENT: 'fragment';
-terminal LEXER: 'lexer';
-terminal PARSER: 'parser';
-terminal GRAMMAR: 'grammar';
-terminal PROTECTED: 'protected';
-terminal PUBLIC: 'public';
-terminal PRIVATE: 'private';
-terminal RETURNS: 'returns';
-terminal LOCALS: 'locals';
-terminal THROWS: 'throws';
-terminal CATCH: 'catch';
-terminal FINALLY: 'finally';
-terminal MODE: 'mode';
+terminal IMPORT: /import\b/;
+terminal FRAGMENT: /fragment\b/;
+terminal LEXER: /lexer\b/;
+terminal PARSER: /parser\b/;
+terminal GRAMMAR: /grammar\b/;
+terminal PROTECTED: /protected\b/;
+terminal PUBLIC: /public\b/;
+terminal PRIVATE: /private\b/;
+terminal RETURNS: /returns\b/;
+terminal LOCALS: /locals\b/;
+terminal THROWS: /throws\b/;
+terminal CATCH: /catch\b/;
+terminal FINALLY: /finally\b/;
+terminal MODE: /mode\b/;
 
 // -------------------------
 // Punctuation
@@ -272,8 +297,8 @@ terminal COMMA: Comma;
 terminal SEMI: Semi;
 terminal LPAREN: LParen;
 terminal RPAREN: RParen;
-terminal COMMON__END_ACTION: RBrace;
-terminal COMMON__END_ARGUMENT: RBrack;
+terminal NORMAL__ACTION__END_ACTION: RBrace;
+terminal NORMAL__ARGUMENT__END_ARGUMENT: RBrack;
 terminal RARROW: RArrow;
 terminal LT: Lt;
 terminal GT: Gt;
@@ -315,7 +340,7 @@ hidden terminal COMMON__WS: Ws+;
 // -------------------------
 
 terminal ARGUMENT__LEXER_CHAR_SET_BODY
-   : /[^ \]\\]/ | EscAny 
+   : (/[^ \]\\]/ | EscAny)+
    ;
 
 terminal COMMON__ESCAPE
@@ -416,7 +441,7 @@ terminal fragment UpperNameStartChar
 
 // -----------------------------------
 // Types
-terminal fragment Int: 'int';
+terminal fragment Int: /int\b/;
 
 // -----------------------------------
 // Symbols

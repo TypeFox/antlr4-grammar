@@ -96,12 +96,12 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           },
           {
             "$type": "Assignment",
-            "feature": "name",
+            "feature": "id",
             "operator": "=",
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "UPPER_CASE_ID"
+                "$refText": "GrammarId"
               },
               "arguments": []
             }
@@ -313,7 +313,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "COMMON__END_ACTION"
+              "$refText": "NORMAL__ACTION__END_ACTION"
             },
             "arguments": []
           }
@@ -339,7 +339,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "UPPER_CASE_ID"
+                "$refText": "LOWER_CASE_ID"
               },
               "arguments": []
             }
@@ -388,7 +388,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$refText": "UPPER_CASE_ID"
+                    "$refText": "Id"
                   },
                   "arguments": []
                 }
@@ -410,7 +410,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
                     "terminal": {
                       "$type": "RuleCall",
                       "rule": {
-                        "$refText": "UPPER_CASE_ID"
+                        "$refText": "Id"
                       },
                       "arguments": []
                     }
@@ -561,12 +561,12 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
               },
               {
                 "$type": "Assignment",
-                "feature": "name",
+                "feature": "id",
                 "operator": "=",
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$refText": "UPPER_CASE_ID"
+                    "$refText": "GrammarId"
                   },
                   "arguments": []
                 }
@@ -575,12 +575,12 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           },
           {
             "$type": "Assignment",
-            "feature": "name",
+            "feature": "id",
             "operator": "=",
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "UPPER_CASE_ID"
+                "$refText": "GrammarId"
               },
               "arguments": []
             }
@@ -614,7 +614,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "IdList"
+                "$refText": "TokenIdList"
               },
               "arguments": []
             },
@@ -623,7 +623,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "COMMON__END_ACTION"
+              "$refText": "NORMAL__ACTION__END_ACTION"
             },
             "arguments": []
           }
@@ -656,7 +656,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "IdList"
+                "$refText": "ChannelIdList"
               },
               "arguments": []
             },
@@ -665,7 +665,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "COMMON__END_ACTION"
+              "$refText": "NORMAL__ACTION__END_ACTION"
             },
             "arguments": []
           }
@@ -680,7 +680,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     },
     {
       "$type": "ParserRule",
-      "name": "IdList",
+      "name": "TokenIdList",
       "definition": {
         "$type": "Group",
         "elements": [
@@ -689,18 +689,11 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "feature": "ids",
             "operator": "+=",
             "terminal": {
-              "$type": "CrossReference",
-              "type": {
-                "$refText": "ModeSpec"
+              "$type": "RuleCall",
+              "rule": {
+                "$refText": "TokenId"
               },
-              "terminal": {
-                "$type": "RuleCall",
-                "rule": {
-                  "$refText": "UPPER_CASE_ID"
-                },
-                "arguments": []
-              },
-              "deprecatedSyntax": false
+              "arguments": []
             }
           },
           {
@@ -718,18 +711,71 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
                 "feature": "ids",
                 "operator": "+=",
                 "terminal": {
-                  "$type": "CrossReference",
-                  "type": {
-                    "$refText": "ModeSpec"
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$refText": "TokenId"
                   },
-                  "terminal": {
-                    "$type": "RuleCall",
-                    "rule": {
-                      "$refText": "UPPER_CASE_ID"
-                    },
-                    "arguments": []
+                  "arguments": []
+                }
+              }
+            ],
+            "cardinality": "*"
+          },
+          {
+            "$type": "RuleCall",
+            "rule": {
+              "$refText": "COMMA"
+            },
+            "arguments": [],
+            "cardinality": "?"
+          }
+        ]
+      },
+      "definesHiddenTokens": false,
+      "entry": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
+    },
+    {
+      "$type": "ParserRule",
+      "name": "ChannelIdList",
+      "definition": {
+        "$type": "Group",
+        "elements": [
+          {
+            "$type": "Assignment",
+            "feature": "ids",
+            "operator": "+=",
+            "terminal": {
+              "$type": "RuleCall",
+              "rule": {
+                "$refText": "ChannelId"
+              },
+              "arguments": []
+            }
+          },
+          {
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "RuleCall",
+                "rule": {
+                  "$refText": "COMMA"
+                },
+                "arguments": []
+              },
+              {
+                "$type": "Assignment",
+                "feature": "ids",
+                "operator": "+=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$refText": "ChannelId"
                   },
-                  "deprecatedSyntax": false
+                  "arguments": []
                 }
               }
             ],
@@ -797,7 +843,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "UPPER_CASE_ID"
+                "$refText": "LOWER_CASE_ID"
               },
               "arguments": []
             }
@@ -883,7 +929,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "COMMON__BEGIN_ACTION"
+              "$refText": "NORMAL__ACTION__BEGIN_ACTION"
             },
             "arguments": []
           },
@@ -903,7 +949,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "COMMON__END_ACTION"
+              "$refText": "NORMAL__ACTION__END_ACTION"
             },
             "arguments": []
           }
@@ -975,7 +1021,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "COMMON__BEGIN_ARGUMENT"
+              "$refText": "NORMAL__ARGUMENT__BEGIN_ARGUMENT"
             },
             "arguments": []
           },
@@ -995,7 +1041,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "COMMON__END_ARGUMENT"
+              "$refText": "NORMAL__ARGUMENT__END_ARGUMENT"
             },
             "arguments": []
           }
@@ -1011,7 +1057,6 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     {
       "$type": "ParserRule",
       "name": "CharSetContent",
-      "dataType": "string",
       "definition": {
         "$type": "Alternatives",
         "elements": [
@@ -1026,6 +1071,13 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "$type": "RuleCall",
             "rule": {
               "$refText": "COMMON__ESCAPE"
+            },
+            "arguments": []
+          },
+          {
+            "$type": "RuleCall",
+            "rule": {
+              "$refText": "CharSet"
             },
             "arguments": []
           }
@@ -1047,7 +1099,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "COMMON__BEGIN_ARGUMENT"
+              "$refText": "NORMAL__ARGUMENT__BEGIN_ARGUMENT"
             },
             "arguments": []
           },
@@ -1067,7 +1119,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           {
             "$type": "RuleCall",
             "rule": {
-              "$refText": "COMMON__END_ARGUMENT"
+              "$refText": "NORMAL__ARGUMENT__END_ARGUMENT"
             },
             "arguments": []
           }
@@ -1145,12 +1197,12 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
           },
           {
             "$type": "Assignment",
-            "feature": "name",
+            "feature": "id",
             "operator": "=",
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "UPPER_CASE_ID"
+                "$refText": "ModeId"
               },
               "arguments": []
             }
@@ -2545,7 +2597,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "UPPER_CASE_ID"
+                "$refText": "ModeId"
               },
               "arguments": []
             },
@@ -2790,7 +2842,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "IdentifierRef"
+                "$refText": "LOWER_CASE_ID"
               },
               "arguments": []
             }
@@ -3591,7 +3643,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "IdentifierRef"
+                "$refText": "RuleIdRef"
               },
               "arguments": []
             }
@@ -3756,7 +3808,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$refText": "IdentifierRef"
+                "$refText": "LOWER_CASE_ID"
               },
               "arguments": []
             }
@@ -3781,7 +3833,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
                     {
                       "$type": "RuleCall",
                       "rule": {
-                        "$refText": "IdentifierRef"
+                        "$refText": "LOWER_CASE_ID"
                       },
                       "arguments": []
                     },
@@ -3809,7 +3861,165 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     },
     {
       "$type": "ParserRule",
-      "name": "IdentifierRef",
+      "name": "Id",
+      "definition": {
+        "$type": "Assignment",
+        "feature": "name",
+        "operator": "=",
+        "terminal": {
+          "$type": "Alternatives",
+          "elements": [
+            {
+              "$type": "RuleCall",
+              "rule": {
+                "$refText": "LOWER_CASE_ID"
+              },
+              "arguments": []
+            },
+            {
+              "$type": "RuleCall",
+              "rule": {
+                "$refText": "UPPER_CASE_ID"
+              },
+              "arguments": []
+            }
+          ]
+        }
+      },
+      "definesHiddenTokens": false,
+      "entry": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
+    },
+    {
+      "$type": "ParserRule",
+      "name": "GrammarId",
+      "definition": {
+        "$type": "Assignment",
+        "feature": "name",
+        "operator": "=",
+        "terminal": {
+          "$type": "Alternatives",
+          "elements": [
+            {
+              "$type": "RuleCall",
+              "rule": {
+                "$refText": "LOWER_CASE_ID"
+              },
+              "arguments": []
+            },
+            {
+              "$type": "RuleCall",
+              "rule": {
+                "$refText": "UPPER_CASE_ID"
+              },
+              "arguments": []
+            }
+          ]
+        }
+      },
+      "definesHiddenTokens": false,
+      "entry": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
+    },
+    {
+      "$type": "ParserRule",
+      "name": "ChannelId",
+      "definition": {
+        "$type": "Assignment",
+        "feature": "name",
+        "operator": "=",
+        "terminal": {
+          "$type": "Alternatives",
+          "elements": [
+            {
+              "$type": "RuleCall",
+              "rule": {
+                "$refText": "LOWER_CASE_ID"
+              },
+              "arguments": []
+            },
+            {
+              "$type": "RuleCall",
+              "rule": {
+                "$refText": "UPPER_CASE_ID"
+              },
+              "arguments": []
+            }
+          ]
+        }
+      },
+      "definesHiddenTokens": false,
+      "entry": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
+    },
+    {
+      "$type": "ParserRule",
+      "name": "ModeId",
+      "definition": {
+        "$type": "Assignment",
+        "feature": "name",
+        "operator": "=",
+        "terminal": {
+          "$type": "Alternatives",
+          "elements": [
+            {
+              "$type": "RuleCall",
+              "rule": {
+                "$refText": "LOWER_CASE_ID"
+              },
+              "arguments": []
+            },
+            {
+              "$type": "RuleCall",
+              "rule": {
+                "$refText": "UPPER_CASE_ID"
+              },
+              "arguments": []
+            }
+          ]
+        }
+      },
+      "definesHiddenTokens": false,
+      "entry": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
+    },
+    {
+      "$type": "ParserRule",
+      "name": "TokenId",
+      "definition": {
+        "$type": "Assignment",
+        "feature": "name",
+        "operator": "=",
+        "terminal": {
+          "$type": "RuleCall",
+          "rule": {
+            "$refText": "UPPER_CASE_ID"
+          },
+          "arguments": []
+        }
+      },
+      "definesHiddenTokens": false,
+      "entry": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
+    },
+    {
+      "$type": "ParserRule",
+      "name": "RuleIdRef",
       "definition": {
         "$type": "Alternatives",
         "elements": [
@@ -3839,7 +4049,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
             "terminal": {
               "$type": "CrossReference",
               "type": {
-                "$refText": "LexerRuleSpec"
+                "$refText": "TokenRef"
               },
               "terminal": {
                 "$type": "RuleCall",
@@ -3946,7 +4156,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     },
     {
       "$type": "TerminalRule",
-      "name": "COMMON__BEGIN_ARGUMENT",
+      "name": "NORMAL__ARGUMENT__BEGIN_ARGUMENT",
       "definition": {
         "$type": "TerminalRuleCall",
         "rule": {
@@ -3958,7 +4168,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     },
     {
       "$type": "TerminalRule",
-      "name": "COMMON__BEGIN_ACTION",
+      "name": "NORMAL__ACTION__BEGIN_ACTION",
       "definition": {
         "$type": "TerminalRuleCall",
         "rule": {
@@ -3975,11 +4185,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
         "$type": "TerminalGroup",
         "elements": [
           {
-            "$type": "CharacterRange",
-            "left": {
-              "$type": "Keyword",
-              "value": "options"
-            }
+            "$type": "RegexToken",
+            "regex": "options\\\\b"
           },
           {
             "$type": "TerminalRuleCall",
@@ -4007,11 +4214,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
         "$type": "TerminalGroup",
         "elements": [
           {
-            "$type": "CharacterRange",
-            "left": {
-              "$type": "Keyword",
-              "value": "tokens"
-            }
+            "$type": "RegexToken",
+            "regex": "tokens\\\\b"
           },
           {
             "$type": "TerminalRuleCall",
@@ -4039,11 +4243,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
         "$type": "TerminalGroup",
         "elements": [
           {
-            "$type": "CharacterRange",
-            "left": {
-              "$type": "Keyword",
-              "value": "channels"
-            }
+            "$type": "RegexToken",
+            "regex": "channels\\\\b"
           },
           {
             "$type": "TerminalRuleCall",
@@ -4126,11 +4327,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "$type": "TerminalRule",
       "name": "IMPORT",
       "definition": {
-        "$type": "CharacterRange",
-        "left": {
-          "$type": "Keyword",
-          "value": "import"
-        }
+        "$type": "RegexToken",
+        "regex": "import\\\\b"
       },
       "fragment": false,
       "hidden": false
@@ -4139,11 +4337,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "$type": "TerminalRule",
       "name": "FRAGMENT",
       "definition": {
-        "$type": "CharacterRange",
-        "left": {
-          "$type": "Keyword",
-          "value": "fragment"
-        }
+        "$type": "RegexToken",
+        "regex": "fragment\\\\b"
       },
       "fragment": false,
       "hidden": false
@@ -4152,11 +4347,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "$type": "TerminalRule",
       "name": "LEXER",
       "definition": {
-        "$type": "CharacterRange",
-        "left": {
-          "$type": "Keyword",
-          "value": "lexer"
-        }
+        "$type": "RegexToken",
+        "regex": "lexer\\\\b"
       },
       "fragment": false,
       "hidden": false
@@ -4165,11 +4357,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "$type": "TerminalRule",
       "name": "PARSER",
       "definition": {
-        "$type": "CharacterRange",
-        "left": {
-          "$type": "Keyword",
-          "value": "parser"
-        }
+        "$type": "RegexToken",
+        "regex": "parser\\\\b"
       },
       "fragment": false,
       "hidden": false
@@ -4178,11 +4367,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "$type": "TerminalRule",
       "name": "GRAMMAR",
       "definition": {
-        "$type": "CharacterRange",
-        "left": {
-          "$type": "Keyword",
-          "value": "grammar"
-        }
+        "$type": "RegexToken",
+        "regex": "grammar\\\\b"
       },
       "fragment": false,
       "hidden": false
@@ -4191,11 +4377,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "$type": "TerminalRule",
       "name": "PROTECTED",
       "definition": {
-        "$type": "CharacterRange",
-        "left": {
-          "$type": "Keyword",
-          "value": "protected"
-        }
+        "$type": "RegexToken",
+        "regex": "protected\\\\b"
       },
       "fragment": false,
       "hidden": false
@@ -4204,11 +4387,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "$type": "TerminalRule",
       "name": "PUBLIC",
       "definition": {
-        "$type": "CharacterRange",
-        "left": {
-          "$type": "Keyword",
-          "value": "public"
-        }
+        "$type": "RegexToken",
+        "regex": "public\\\\b"
       },
       "fragment": false,
       "hidden": false
@@ -4217,11 +4397,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "$type": "TerminalRule",
       "name": "PRIVATE",
       "definition": {
-        "$type": "CharacterRange",
-        "left": {
-          "$type": "Keyword",
-          "value": "private"
-        }
+        "$type": "RegexToken",
+        "regex": "private\\\\b"
       },
       "fragment": false,
       "hidden": false
@@ -4230,11 +4407,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "$type": "TerminalRule",
       "name": "RETURNS",
       "definition": {
-        "$type": "CharacterRange",
-        "left": {
-          "$type": "Keyword",
-          "value": "returns"
-        }
+        "$type": "RegexToken",
+        "regex": "returns\\\\b"
       },
       "fragment": false,
       "hidden": false
@@ -4243,11 +4417,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "$type": "TerminalRule",
       "name": "LOCALS",
       "definition": {
-        "$type": "CharacterRange",
-        "left": {
-          "$type": "Keyword",
-          "value": "locals"
-        }
+        "$type": "RegexToken",
+        "regex": "locals\\\\b"
       },
       "fragment": false,
       "hidden": false
@@ -4256,11 +4427,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "$type": "TerminalRule",
       "name": "THROWS",
       "definition": {
-        "$type": "CharacterRange",
-        "left": {
-          "$type": "Keyword",
-          "value": "throws"
-        }
+        "$type": "RegexToken",
+        "regex": "throws\\\\b"
       },
       "fragment": false,
       "hidden": false
@@ -4269,11 +4437,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "$type": "TerminalRule",
       "name": "CATCH",
       "definition": {
-        "$type": "CharacterRange",
-        "left": {
-          "$type": "Keyword",
-          "value": "catch"
-        }
+        "$type": "RegexToken",
+        "regex": "catch\\\\b"
       },
       "fragment": false,
       "hidden": false
@@ -4282,11 +4447,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "$type": "TerminalRule",
       "name": "FINALLY",
       "definition": {
-        "$type": "CharacterRange",
-        "left": {
-          "$type": "Keyword",
-          "value": "finally"
-        }
+        "$type": "RegexToken",
+        "regex": "finally\\\\b"
       },
       "fragment": false,
       "hidden": false
@@ -4295,11 +4457,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "$type": "TerminalRule",
       "name": "MODE",
       "definition": {
-        "$type": "CharacterRange",
-        "left": {
-          "$type": "Keyword",
-          "value": "mode"
-        }
+        "$type": "RegexToken",
+        "regex": "mode\\\\b"
       },
       "fragment": false,
       "hidden": false
@@ -4378,7 +4537,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     },
     {
       "$type": "TerminalRule",
-      "name": "COMMON__END_ACTION",
+      "name": "NORMAL__ACTION__END_ACTION",
       "definition": {
         "$type": "TerminalRuleCall",
         "rule": {
@@ -4390,7 +4549,7 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
     },
     {
       "$type": "TerminalRule",
-      "name": "COMMON__END_ARGUMENT",
+      "name": "NORMAL__ARGUMENT__END_ARGUMENT",
       "definition": {
         "$type": "TerminalRuleCall",
         "rule": {
@@ -4633,7 +4792,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
               "$refText": "EscAny"
             }
           }
-        ]
+        ],
+        "cardinality": "+"
       },
       "fragment": false,
       "hidden": false
@@ -5183,11 +5343,8 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "fragment": true,
       "name": "Int",
       "definition": {
-        "$type": "CharacterRange",
-        "left": {
-          "$type": "Keyword",
-          "value": "int"
-        }
+        "$type": "RegexToken",
+        "regex": "int\\\\b"
       },
       "hidden": false
     },
@@ -5563,10 +5720,33 @@ export const Antlr4Grammar = (): Grammar => loadedAntlr4Grammar ?? (loadedAntlr4
       "hidden": false
     }
   ],
+  "types": [
+    {
+      "$type": "Type",
+      "typeAlternatives": [
+        {
+          "$type": "AtomType",
+          "refType": {
+            "$refText": "TokenId"
+          },
+          "isArray": false,
+          "isRef": false
+        },
+        {
+          "$type": "AtomType",
+          "refType": {
+            "$refText": "LexerRuleSpec"
+          },
+          "isArray": false,
+          "isRef": false
+        }
+      ],
+      "name": "TokenRef"
+    }
+  ],
   "definesHiddenTokens": false,
   "hiddenTokens": [],
   "imports": [],
   "interfaces": [],
-  "types": [],
   "usedGrammars": []
 }`));

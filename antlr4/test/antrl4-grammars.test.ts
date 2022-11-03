@@ -4,16 +4,23 @@ import { GrammarSpec } from "../src/language-server/generated/ast";
 import { getAntlr4Grammars } from "./utils/antlr4-grammars";
 
 describe("Antlr4 grammars", async () => {
-  const { clear, parse, expectOk, initialize } =
-    await parseHelper<GrammarSpec>();
+  const { clear, parse, expectOk, initialize } = await parseHelper<GrammarSpec>();
 
   beforeAll(() => initialize());
 
   afterEach(() => clear());
 
   const grammars = await getAntlr4Grammars();
-  it.each(Object.keys(grammars))('recognizing %s', async (name) => {
+  it.each(Object.keys(grammars))('parsing "%s" grammar', async (name) => {
     const documents = await parse(grammars[name]);
+    for (const documentFilename of Object.keys(documents)) {
+      const document = documents[documentFilename];
+      expectOk(document);
+    }
+  });
+  
+  it('parsing cherrypicked grammar', async () => {
+    const documents = await parse(grammars['velocity']);
     for (const documentFilename of Object.keys(documents)) {
       const document = documents[documentFilename];
       expectOk(document);
